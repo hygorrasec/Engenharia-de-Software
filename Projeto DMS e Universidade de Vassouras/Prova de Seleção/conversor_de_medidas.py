@@ -37,20 +37,20 @@ def check_input(medida):
 
 # Função do Resultado Final
 def result(medida_escolhida,medida,quantidade,qnt_formatado):
-    calc_milhas = "{:.6f}".format((quantidade*medida)/160934.4)
+    calc_milha = "{:.6f}".format((quantidade*medida)/160934.4)
     calc_polegada = "{:.6f}".format((quantidade*medida)/2.54)
-    calc_pes = "{:.6f}".format((quantidade*medida)/30.48)
+    calc_pe = "{:.6f}".format((quantidade*medida)/30.48)
     calc_cm = "{:.6f}".format(quantidade*medida)
-    calc_metros = "{:.6f}".format((quantidade*medida)/100)
+    calc_metro = "{:.6f}".format((quantidade*medida)/100)
     calc_km = "{:.6f}".format((quantidade*medida)/100000)
 
     print(f"\nSegue abaixo as Conversões de Medidas do valor: {qnt_formatado} que você escolheu:\n")
 
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_milhas} milha(s)")
+    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_milha} milha(s)")
     print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_polegada} polegada(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_pes} pé(s)")
+    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_pe} pé(s)")
     print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_cm} centímetro(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_metros} metro(s)")
+    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_metro} metro(s)")
     print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_km} quilômetro(s)")
 
 if (int(unidade_medida) == 1):
@@ -91,4 +91,4 @@ elif (int(unidade_medida) == 6):
     result(medida_escolhida,medida,quantidade,qnt_formatado)
 
 print("\n=============FIM=============\n")
-input(f"Versão do Programa: {version}\nDev.: {dev}\nContato(Whatsapp): {whatsapp}\nEmail: {email}\n\nObrigado por usar o meu programa!\n\nPrecione Enter para fechar.")
+input(f"Versão do Programa: {version}\nDev.: {dev}\nContato(Whatsapp): {whatsapp}\nEmail: {email}\n\nObrigado por usar o meu programa!\n\nPressione alguma tecla para fechar.")
