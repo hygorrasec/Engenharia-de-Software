@@ -4,13 +4,8 @@ dev = "Hygor Rasec"
 whatsapp = "21 99724-8557"
 email = "hygorrasec@gmail.com"
 
-cm = 1 # 1 centímetro (cm)
-m = 100 # 1 metro (m) = 100 centímetros (cm)
-km = 100000 # 1 quilômtro (km) = 100000 centímetros (cm)
-
-mile = 160934.4 # 1 milha (mile – mi) = 160934.4 centímetro (cm)
-inch = 2.54 # 1 polegada (inch – in) = 2,54 centímetro (cm)
-foot = 30.48 # 1 pé (foot – ft) = 30,48 centímetro (cm)
+medidas = ["Milha", "Polegada", "Pé", "Centímetro", "Metro", "Quilômetro"]
+calc = [160934.4, 2.54, 30.48, 1, 100, 100000]
 
 print("========================================================================")
 print(f"====PROGRAMA DE CONVERSÃO DE MEDIDAS - DESENVOLVIDO POR {dev}====")
@@ -18,8 +13,8 @@ print("========================================================================\
 
 # Primeiro Input
 while True:
-    unidade_medida = input("Digite o número correspondente a Unidade de Medida que deseja converter:\n\n(1) = Milhas\n(2) = Polegadas\n(3) = Pés\n(4) = Centímetros\n(5) = Metros\n(6) = Quilômetros\n\nDigite aqui: ")
-    if (unidade_medida.isnumeric()) and (int(unidade_medida) >= 1) and (int(unidade_medida) <= 6):
+    unidade_medida = input("Digite o número correspondente a Unidade de Medida que deseja converter:\n\n(0) = Milha\n(1) = Polegada\n(2) = Pé\n(3) = Centímetro\n(4) = Metro\n(5) = Quilômetro\n\nDigite aqui: ")
+    if (unidade_medida.isnumeric()) and (int(unidade_medida) >= 0) and (int(unidade_medida) <= 5):
         break
     else:
         print(f"\nVocê digitou: '{unidade_medida}'. Por favor, digite um dos números que estão na lista apresentada!\n")
@@ -36,33 +31,19 @@ def check_input(medida):
     return quantidade
 
 # Função do Resultado Final
-def result(medida_escolhida,medida):
+def result(medida_escolhida,medida,unidade_medida):
     quantidade = float(check_input(medida_escolhida))
     qnt_formatado = "{:.0f}".format(quantidade)
-    medidas = ["milha", "polegada", "pé", "centímetro", "metro", "quilômetro"]
-    calc = [mile, inch, foot, cm, m, km]
 
     print(f"\nSegue abaixo as Conversões de Medidas do valor {qnt_formatado} que você escolheu:\n")
 
     count = 0
     for c1 in calc:
         c2 = "{:.6f}".format((quantidade*medida)/c1)
-        print(f"{qnt_formatado} {medida_escolhida}(s) = {c2} {medidas[count]}(s)")
+        print(f"{qnt_formatado} {medidas[unidade_medida]}(s) = {c2} {medidas[count]}(s)")
         count += 1
 
-match int(unidade_medida):
-    case 1:
-        result("Milha",mile)
-    case 2:
-        result("Polegada",inch)
-    case 3:
-        result("Pé",foot)
-    case 4:
-        result("Centímetro",cm)
-    case 5:
-        result("Metro",m)
-    case 6:
-        result("Quilômetro",km)
+result(medidas[int(unidade_medida)],calc[int(unidade_medida)],int(unidade_medida))
 
 print("\n=============FIM=============\n")
 input(f"Versão do Programa: {version}\nDev.: {dev}\nContato(Whatsapp): {whatsapp}\nEmail: {email}\n\nObrigado por usar o meu programa!\n\nPressione alguma tecla para fechar.")
