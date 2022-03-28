@@ -36,59 +36,33 @@ def check_input(medida):
     return quantidade
 
 # Função do Resultado Final
-def result(medida_escolhida,medida,quantidade,qnt_formatado):
-    calc_milha = "{:.6f}".format((quantidade*medida)/160934.4)
-    calc_polegada = "{:.6f}".format((quantidade*medida)/2.54)
-    calc_pe = "{:.6f}".format((quantidade*medida)/30.48)
-    calc_cm = "{:.6f}".format(quantidade*medida)
-    calc_metro = "{:.6f}".format((quantidade*medida)/100)
-    calc_km = "{:.6f}".format((quantidade*medida)/100000)
+def result(medida_escolhida,medida):
+    quantidade = float(check_input(medida_escolhida))
+    qnt_formatado = "{:.0f}".format(quantidade)
+    medidas = ["milha", "polegada", "pé", "centímetro", "metro", "quilômetro"]
+    calc = [mile, inch, foot, cm, m, km]
 
-    print(f"\nSegue abaixo as Conversões de Medidas do valor: {qnt_formatado} que você escolheu:\n")
+    print(f"\nSegue abaixo as Conversões de Medidas do valor {qnt_formatado} que você escolheu:\n")
 
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_milha} milha(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_polegada} polegada(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_pe} pé(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_cm} centímetro(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_metro} metro(s)")
-    print(f"{qnt_formatado} {medida_escolhida}(s) = {calc_km} quilômetro(s)")
+    count = 0
+    for c1 in calc:
+        c2 = "{:.6f}".format((quantidade*medida)/c1)
+        print(f"{qnt_formatado} {medida_escolhida}(s) = {c2} {medidas[count]}(s)")
+        count += 1
 
-if (int(unidade_medida) == 1):
-    medida_escolhida = "Milha"
-    quantidade = float(check_input(medida_escolhida))
-    qnt_formatado = "{:.0f}".format(quantidade)
-    medida = mile
-    result(medida_escolhida,medida,quantidade,qnt_formatado)
-elif (int(unidade_medida) == 2):
-    medida_escolhida = "Polegada"
-    quantidade = float(check_input(medida_escolhida))
-    qnt_formatado = "{:.0f}".format(quantidade)
-    medida = inch
-    result(medida_escolhida,medida,quantidade,qnt_formatado)
-elif (int(unidade_medida) == 3):
-    medida_escolhida = "Pé"
-    quantidade = float(check_input(medida_escolhida))
-    qnt_formatado = "{:.0f}".format(quantidade)
-    medida = foot
-    result(medida_escolhida,medida,quantidade,qnt_formatado)
-elif (int(unidade_medida) == 4):
-    medida_escolhida = "Centímetro"
-    quantidade = float(check_input(medida_escolhida))
-    qnt_formatado = "{:.0f}".format(quantidade)
-    medida = cm
-    result(medida_escolhida,medida,quantidade,qnt_formatado)
-elif (int(unidade_medida) == 5):
-    medida_escolhida = "Metro"
-    quantidade = float(check_input(medida_escolhida))
-    qnt_formatado = "{:.0f}".format(quantidade)
-    medida = m
-    result(medida_escolhida,medida,quantidade,qnt_formatado)
-elif (int(unidade_medida) == 6):
-    medida_escolhida = "Quilômetro"
-    quantidade = float(check_input(medida_escolhida))
-    qnt_formatado = "{:.0f}".format(quantidade)
-    medida = km
-    result(medida_escolhida,medida,quantidade,qnt_formatado)
+match int(unidade_medida):
+    case 1:
+        result("Milha",mile)
+    case 2:
+        result("Polegada",inch)
+    case 3:
+        result("Pé",foot)
+    case 4:
+        result("Centímetro",cm)
+    case 5:
+        result("Metro",m)
+    case 6:
+        result("Quilômetro",km)
 
 print("\n=============FIM=============\n")
 input(f"Versão do Programa: {version}\nDev.: {dev}\nContato(Whatsapp): {whatsapp}\nEmail: {email}\n\nObrigado por usar o meu programa!\n\nPressione alguma tecla para fechar.")
