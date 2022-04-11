@@ -139,4 +139,123 @@ print(f'{J} jardas tem {M} metros.')
 M = 20
 J = M * 1.0936
 print(f'{M} metros tem {J} jardas.')
+
+# 24 - Leia um valor de área em m² (metros quadrados) e apresente-o convertido em acres. A fórmula de conversão é: A = M * 0.00024711, sendo A a área em acres e M a área em metros quadrados.
+
+M = 10
+A = M * 0.00024711
+print(f'{M} m² tem {A} acres.')
+
+# 25 - Leia um valor de área em acres e apresente-o convertido em m² (metros quadrados). A fórmula de conversão é: M = A / 0.00024711, sendo M a área em metros quadrados e A a área em acres.
+
+A = 1
+M = A / 0.00024711
+print(f'{A} acres tem {M} m².')
+
+# 26 - Leia um valor de área em m² (metros quadrados) e apresente-o convertido em hectares. A fórmula de conversão é: H = M / 10000, sendo H a área em hectares e M a área em metros quadrados.
+
+M = 20
+H = M / 10000
+print(f'{M} m² tem {H} hectares.')
+
+# 27 - Leia um valor de área em hectares e apresente-o convertido em m² (metros quadrados). A fórmula de conversão é: M = H * 10000, sendo M a área em metros quadrados e H a área em hectares.
+
+H = 1
+M = H * 10000
+print(f'{H} hectares tem {M} m².')
+
+# 28 - Faça a leitura de três valores e apresente como resultado a soma dos quadrados dos três valores lidos.
+
+v1, v2, v3 = 5, 4, 2
+print(f'A soma dos quadrados dos três valores ({v1} + {v2} + {v3}) são: ({v1*v1} + {v2*v2} + {v3*v3}) = {v1*v1+v2*v2+v3*v3}')
+
+# 29 - Leia quatro notas, calcule a média aritmética e imprima o resultado.
+
+n1, n2, n3, n4 = 8, 7, 7, 8
+media = (n1+n2+n3+n4)/4
+print(f'A média aritmética das notas foi: {media}')
+
+# 30 - Leia um valor em real e a cotação em dólar. Em seguida, imprima o valor correspondente em dólares.
+
+real = 2
+cotacao_dolar = 4.70
+print(f'{real} reais está custando hoje {cotacao_dolar*real} dólares.')
+
+# 31 - Leia um número inteiro e imprima o seu antecessor e o seu sucessor.
+
+numero = 0
+antecessor = numero-1
+sucessor = numero+1
+print(f'O número {numero} tem como antecessor o número {antecessor} e como sucessor o número {sucessor}.')
+
+# 32 - Leia um número inteiro e imprima a soma do sucessor de seu triplo com o antecessor de seu dobro.
+
+n = 5
+n_triplo_sucessor = n*3+1
+n_dobro_antecessor = n*2-1
+soma = n_triplo_sucessor+n_dobro_antecessor
+print(f'A soma do sucessor do triplo de {n} ({n_triplo_sucessor}) mais o antecessor do dobro de {n} ({n_dobro_antecessor}) resulta em: {soma}.')
+
+# 33 - Leia o tamanho do lado de um quadrado e imprima como resultado a sua área.
+
+l = 1.5
+a = l*l
+print(f'A área do quadrado com lado de {l}m tem {a}m².')
+
+# 34 - Leia o valor do raio de um círculo, calcule e imprima a área do círculo correspondente. A área do círculo é raio² * pi, considerando pi = 3.141592653589793.
+
+import math
+
+raio = 3
+a = (raio*raio) * math.pi
+print(f'A área do círculo com raio {raio} cm tem {a} cm².')
+
+# 35 - Seja 'a' e 'b' os catetos de um triângulo, onde a hipotenusa é obtida pela equação: hipotenusa = raiz de (a² + b²). Faça um programa que receba os valores de 'a' e 'b' e calcule o valor da hipotenusa através da equação. Imprima o resultado dessa operação.
+
+import math
+
+cateto_a = 5
+cateto_b = 7
+soma_catetos = (cateto_a*cateto_a)+(cateto_b*cateto_b)
+raiz = math.sqrt(soma_catetos)
+print(f'A soma dos quadrados dos catetos {cateto_a} e {cateto_b} de um triângulo retângulo é igual a {raiz}')
+
+# 36 - Leia a altura e o raio de um cilindro circular e imprima o volume do cilindro. O volume de um cilindro circular é calculado por meio da seguinte fórmula: V = pi * raio² * altura, onde pi = 3.141592653589793.
+
+import math
+
+altura = 5
+raio = 4
+volume = math.pi * (raio*raio) * altura
+print(f'Um cilindro circular com altura {altura} cm e raio {raio} cm tem volume de {volume} cm³.')
+
+# 37 - Faça um programa que leia o valor de um produto e imprima o valor com desconto, tendo em vista que o desconto foi de 12%.
+
+valor = 80
+desconto_porcentagem = 12
+total = valor*((100-desconto_porcentagem)/100)
+print(f'O procuto custa {valor} reais e com desconto de {desconto_porcentagem}% passa a custar {total}.')
+
+# 38 - Leia o salário de um funcionário. Calcule e imprima o valor do novo salário, sabendo que ele recebeu um aumento de 25%.
+
+salario = 1200
+aumento_porcentagem = 25
+novo_salario = salario*((aumento_porcentagem/100)+1)
+print(f'O funcionário recebe {salario} reais, com aumento de {aumento_porcentagem}% seu salário foi para {novo_salario} reais.')
+
+
+# 39 - A importância de R$ 780.000,00 será dividida entre três ganhadores de um concurso. Sendo que da quantia total:
+# -> O primeiro gahador receberá 46%;
+# -> O segundo receberá 32%;
+# -> O terceiro receberá o restante;
+
+premiacao_total = 780000
+primeiro_lugar = 46
+segundo_lugar = 32
+terceiro_lugar = 100-primeiro_lugar-segundo_lugar
+valor_primeiro = premiacao_total*(primeiro_lugar/100)
+valor_segundo = premiacao_total*(segundo_lugar/100)
+valor_terceiro = premiacao_total*(terceiro_lugar/100)
+
+print(f'O primeiro ganhador levou {valor_primeiro} reais, o segundo ganhador levou {valor_segundo} reais e o terceiro levou {valor_terceiro} reais!')
 """
