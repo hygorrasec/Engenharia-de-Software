@@ -19,7 +19,7 @@ print(f'O resultado da soma ({n1} + {n2} + {n3}) foi: {n1+n2+n3}')
 # 04 - Leia um número real e imprima o resultado do quadrado desse número.
 
 numero_real = 1.74
-ao_quadrado = numero_real*numero_real
+ao_quadrado = numero_real**2
 print(f'O número {numero_real} elevado ao quadrado é: {ao_quadrado}')
 
 # 05 - Leia um número real e imprima a quinta parte desse número.
@@ -167,7 +167,7 @@ print(f'{H} hectares tem {M} m².')
 # 28 - Faça a leitura de três valores e apresente como resultado a soma dos quadrados dos três valores lidos.
 
 v1, v2, v3 = 5, 4, 2
-print(f'A soma dos quadrados dos três valores ({v1} + {v2} + {v3}) são: ({v1*v1} + {v2*v2} + {v3*v3}) = {v1*v1+v2*v2+v3*v3}')
+print(f'A soma dos quadrados dos três valores ({v1} + {v2} + {v3}) são: ({v1**2} + {v2**2} + {v3**2}) = {v1**2+v2**2+v3**2}')
 
 # 29 - Leia quatro notas, calcule a média aritmética e imprima o resultado.
 
@@ -206,7 +206,7 @@ print(f'A soma do sucessor do triplo de {n} ({n_triplo_sucessor}) mais o anteces
 # 33 - Leia o tamanho do lado de um quadrado e imprima como resultado a sua área.
 
 l = 1.5
-a = l*l
+a = l**2
 print(f'A área do quadrado com lado de {l}m tem {a}m².')
 
 # 34 - Leia o valor do raio de um círculo, calcule e imprima a área do círculo correspondente. A área do círculo é raio² * pi, considerando pi = 3.141592653589793.
@@ -214,7 +214,7 @@ print(f'A área do quadrado com lado de {l}m tem {a}m².')
 import math
 
 raio = 3
-a = (raio*raio) * math.pi
+a = (raio**2) * math.pi
 print(f'A área do círculo com raio {raio} cm tem {a} cm².')
 
 # 35 - Seja 'a' e 'b' os catetos de um triângulo, onde a hipotenusa é obtida pela equação: hipotenusa = raiz de (a² + b²). Faça um programa que receba os valores de 'a' e 'b' e calcule o valor da hipotenusa através da equação. Imprima o resultado dessa operação.
@@ -223,7 +223,7 @@ import math
 
 cateto_a = 5
 cateto_b = 7
-soma_catetos = (cateto_a*cateto_a)+(cateto_b*cateto_b)
+soma_catetos = (cateto_a**2)+(cateto_b**2)
 raiz = math.sqrt(soma_catetos)
 print(f'A soma dos quadrados dos catetos {cateto_a} e {cateto_b} de um triângulo retângulo é igual a {raiz}')
 
@@ -233,7 +233,7 @@ import math
 
 altura = 5
 raio = 4
-volume = math.pi * (raio*raio) * altura
+volume = math.pi * (raio**2) * altura
 print(f'Um cilindro circular com altura {altura} cm e raio {raio} cm tem volume de {volume} cm³.')
 
 # 37 - Faça um programa que leia o valor de um produto e imprima o valor com desconto, tendo em vista que o desconto foi de 12%.
@@ -413,8 +413,8 @@ Ax, Ay, Bx, By = 2, 3, 0, 0
 
 x = Ax-Bx
 y = Ay-By
-x = x*x
-y = y*y
+x = x**2
+y = y**2
 d = str(math.sqrt(x+y))[0:4]
 print(f'Com a coordenada x = {Ax}cm e y = {Ay}cm temos o ponto A.\nA distância entre o ponto A e o ponto B (0;0) é de {d}cm.')
 
