@@ -5,7 +5,6 @@
 import time, datetime
 from collections import Counter
 from datetime import datetime as dt
-from js import console
 # import sqlalchemy
 # print(sqlalchemy.__version__)
 
@@ -52,15 +51,17 @@ finalNumero = []
 finalVotos = []
 votos = []
 
-eleitores = []
-eleitores.append({'nome': 'Eleitor 01', 'email': 'email1@gmail.com', 'voto': 0})
-eleitores.append({'nome': 'Eleitor 02', 'email': 'email2@gmail.com', 'voto': 0})
-eleitores.append({'nome': 'Eleitor 03', 'email': 'email3@gmail.com', 'voto': 0})
+eleitores = [
+    {'nome': 'Eleitor 01', 'email': 'email1@gmail.com', 'voto': 0},
+    {'nome': 'Eleitor 02', 'email': 'email2@gmail.com', 'voto': 0},
+    {'nome': 'Eleitor 03', 'email': 'email3@gmail.com', 'voto': 0}
+]
 
-candidatos = []
-candidatos.append({'nome': 'Candidato 01', 'numero': 1, 'nascimento': '01/10/1987', 'votos': 0})
-candidatos.append({'nome': 'Candidato 02', 'numero': 2, 'nascimento': '01/10/1988', 'votos': 0})
-candidatos.append({'nome': 'Candidato 03', 'numero': 3, 'nascimento': '01/10/1985', 'votos': 0})
+candidatos = [
+    {'nome': 'Candidato 01', 'numero': 1, 'nascimento': '01/10/1987', 'votos': 0},
+    {'nome': 'Candidato 02', 'numero': 2, 'nascimento': '01/10/1988', 'votos': 0},
+    {'nome': 'Candidato 03', 'numero': 3, 'nascimento': '01/10/1985', 'votos': 0}
+]
 
 # FUNÇÕES COMPLEMENTARES
 def format_date(dt_, fmt="%m/%d/%Y, %H:%M:%S"):
