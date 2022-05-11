@@ -11,32 +11,33 @@
 
     <title>Sistema de Votação</title>
 </head>
-<body style="background-color:rgb(36, 36, 36); color:#FFF">
+<body style="background-color:#781E20; color:#FFF">
     <py-script src="./poll.py"></py-script>
     <main class="container mx-auto px-4">
         <section>
+            <center><img class="text-center" style="width: 25%; padding: 20px;" src="./img/deltaava_vassouras.png" alt="logo"></center>
             <div class="text-center w-full mb-8">
                 <h1 class="text-3xl font-bold uppercase" style="text-decoration: overline;">Sistema de Votação</h1>
                 <h3 style="text-decoration: overline;">Engenharia de Software 1º Período - Universidade de Vassouras - Maricá RJ</h3>
-                <h3 style="text-decoration: overline;">Framework utilizado: PyScript | Criador: Delta AVA | Versão: 1.0</h3>
+                <h3 style="text-decoration: overline;">Framework utilizado: PyScript | Criador: Delta AVA | Versão: 1.5</h3>
             </div>
-            <span style="font-size: 13px;">Matrículas disponíveis para votação:</span>
+            <span style="font-size: 13px;">Matrículas disponíveis para votação (apenas para testes):</span>
             <div style="border: 1px solid black; color: #000 !important; padding: 10px; background-color:#FFFFF0;" id="showEleitores"></div><br>
-            <div id="showPollOk" style="display: none;"></div>
-            <div id="box_conectar" style="display: block">
-                <label for="mat_voter">Para votar, informe a sua matrícula:</label><br>
-                <input style="color: #000 !important;" id="mat_voter" class="border flex-1 mr-3 border-gray-300 p-2 rounded" type="number" maxlength="9">
+            <div class="text-center" id="showPollOk" style="display: none;" class="result"></div>
+            <div class="text-center" id="boxConectar" style="display: block">
+                <label for="emailVoter">Para votar, informe a sua matrícula:</label><br>
+                <input style="color: #000 !important;" id="emailVoter" class="border flex-1 mr-3 border-gray-300 p-2 rounded" type="text">
                 <button id="conectar" class="p-2 text-white bg-blue-600 border border-blue-600 rounded" type="submit" pys-onClick="login">
                     Conectar
                 </button>
+                <div id="showTime" style="display: none; font-size: 13px; font-style: italic; font-weight: bold;"></div>
+                <div id="showMsgEmail" style="display: none;"></div>
             </div>
-            <div id="showTime" style="display: none; font-size: 13px; font-style: italic; font-weight: bold;"></div>
-            <div id="showMsgMat" style="display: none;"></div>
             <div id="showMsgEleitores" style="display: none;"></div>
             <br>
-            <div id="box_poll" style="display: none">
-                <label for="num_candidato">Digite o número do seu candidato:</label><br>
-                <input style="color: #000 !important;" id="num_candidato" class="border flex-1 mr-3 border-gray-300 p-2 rounded" type="number">
+            <div id="boxPoll" style="display: none">
+                <label for="numCandidato">Digite o número do seu candidato:</label><br>
+                <input style="color: #000 !important;" id="numCandidato" class="border flex-1 mr-3 border-gray-300 p-2 rounded" type="number">
                 <button id="poll" class="p-2 text-white bg-blue-600 border border-blue-600 rounded" type="submit" pys-onClick="poll">
                     Votar
                 </button>
@@ -46,15 +47,15 @@
                 <p>SEGUE ABAIXO O REPRESENTANTE E O VICE-REPRESENTANDO DE TURMA, RESPECTIVAMENTE:</p>
             </div>
             <br>
-            <div id="showRepresentanteVice" style="display: none;">
+            <div id="showRepresentanteEVice" style="display: none;">
                 <b><u>REPRESENTANTE:</u></b><br><span id="representanteNome" class="result"></span> com o número <span id="representanteNumero" class="result"></span>. Total de <span id="representanteVotos" class="result"></span> votos(s).<br><br>
-                <b><u>VICE-REPRESENTANTE:</u></b><br><span id="representanteViceNome" class="result"></span> com o número <span id="representanteViceNumero" class="result"></span>. Total de <span id="representanteViceVotos" class="result"></span> votos(s).
+                <b><u>VICE-REPRESENTANTE:</u></b><br><span id="viceNome" class="result"></span> com o número <span id="viceNumero" class="result"></span>. Total de <span id="viceVotos" class="result"></span> votos(s).
             </div>
             <div id="showRepresentante" style="display: none;">
-                <b><u>REPRESENTANTE:</u></b><br><span id="representanteNome" class="result"></span> com o número <span id="representanteNumero" class="result"></span>. Total de <span id="representanteVotos" class="result"></span> votos(s).<br><br>
+                <b><u>REPRESENTANTE:</u></b><br><span id="representanteNome2" class="result"></span> com o número <span id="representanteNumero2" class="result"></span>. Total de <span id="representanteVotos2" class="result"></span> votos(s).<br><br>
             </div>
             <div id="showVice" style="display: none;">
-                <b><u>VICE-REPRESENTANTE:</u></b><br><span id="representanteViceNome" class="result"></span> com o número <span id="representanteViceNumero" class="result"></span>. Total de <span id="representanteViceVotos" class="result"></span> votos(s).
+                <b><u>VICE-REPRESENTANTE:</u></b><br><span id="viceNome2" class="result"></span> com o número <span id="viceNumero2" class="result"></span>. Total de <span id="viceVotos2" class="result"></span> votos(s).
             </div>
             <br>
             <div id="showLastMsg" style="display: none;" class="text-center font-bold"></div>
