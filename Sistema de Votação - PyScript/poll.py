@@ -4,8 +4,8 @@
 
 import time, datetime
 from collections import Counter
-from js import console
 from datetime import datetime as dt
+from js import console
 # import sqlalchemy
 # print(sqlalchemy.__version__)
 
@@ -105,13 +105,10 @@ def login(*ags):
             if eleitor_email == key_eleitor['email']:
                 check_eleitor = 1
                 if key_eleitor['voto'] == 0:
-                    # boxConectar.element.remove()
                     key_eleitor['voto'] = 1
                     display(boxConectar, 'none')
                     display(showMsgEmail, 'none')
-                    # display(showTime, 'block')
                     display(showMsgEleitores, 'block')
-                    # innerText(showTime, f'{now()}')
                     innerText(showMsgEleitores, f'Seja bem-vindo(a) {key_eleitor["nome"]}!\n\nSEGUEM ABAIXO OS CANDIDATOS:\n\n')
 
                     for k in candidatos:
@@ -147,7 +144,6 @@ def poll(*ags):
     for k in candidatos:
         numero_candidato = k['numero']
         if n == numero_candidato:
-            nome_candidato = k['nome']
             votos.append(numero_candidato)
             k['votos'] = k['votos']+1 # Adiciona 1 voto para o candidato escolhido
             check_votou = 1
@@ -177,7 +173,7 @@ def poll(*ags):
         check_votou = 0
     else:
         display(showMsgVote, 'block')
-        innerText(showMsgVote, f'Você digito um número errado.\nPor favor, digite o número de um dos candidatos!')
+        innerText(showMsgVote, f'Você digitou um número errado.\nPor favor, digite o número de um dos candidatos!')
 
     numCandidato.clear()
 
