@@ -1,11 +1,18 @@
 '''
+    SISTEMA DE VOTAÇÃO
+    Engenharia de Software 1º Período - Universidade de Vassouras - Maricá RJ
+    Framework utilizado: PyScript | Criador: Delta AVA | Versão: 1.7
+    Alunos: Antony, Fabrício, Hygor, Kauã, Lucas, Victor
+    Update: 12/05/2022
+
     Instalar o Live Server para rodar a página.
 '''
 
 import time, datetime
-import os
+# import os
 from collections import Counter
 from datetime import datetime as dt
+
 # import sqlalchemy
 # print(sqlalchemy.__version__)
 
@@ -17,11 +24,10 @@ from datetime import datetime as dt
 
 # TENTANTIVA DE REDUZIR O CÓDIGO
 # A class Element() não funciona corretamente dentro do loop.
-# getID = ['testando', 'emailVoter', 'showMsgEmail', 'showMsgEleitores', 'boxConectar', 'boxPoll', 'numCandidato', 'showMsgVote', 'showTime', 'showPollOk', 'showTitleEnd', 'showRepresentanteEVice', 'showRepresentante', 'showVice', 'showLastMsg', 'representanteNome', 'representanteNumero', 'representanteVotos', 'viceNome', 'viceNumero', 'viceVotos', 'showLastThanks', 'showEleitores']
+# getID = ['emailVoter', 'showMsgEmail', 'showMsgEleitores', 'boxConectar', 'boxPoll', 'numCandidato', 'showMsgVote', 'showTime', 'showPollOk', 'showTitleEnd', 'showRepresentanteEVice', 'showRepresentante', 'showVice', 'showLastMsg', 'representanteNome', 'representanteNumero', 'representanteVotos', 'viceNome', 'viceNumero', 'viceVotos', 'showLastThanks', 'showEleitores']
 # for i in range(len(getID)):
 #     getID[i] = Element(getID[i])
 
-testando = Element("testando")
 emailVoter = Element("emailVoter")
 showMsgEmail = Element("showMsgEmail")
 showMsgEleitores = Element("showMsgEleitores")
@@ -50,6 +56,8 @@ viceNumero2 = Element("viceNumero2")
 viceVotos2 = Element("viceVotos2")
 showLastThanks = Element("showLastThanks")
 showEleitores = Element("showEleitores")
+showTotalVotos = Element("showTotalVotos")
+msgTotalVotos = Element("msgTotalVotos")
 
 passwordStop = '987654321'
 
@@ -59,9 +67,9 @@ finalVotos = []
 votos = []
 
 eleitores = [
-    {'nome': 'Eleitor 01', 'email': 'email1@gmail.com', 'voto': 0},
-    {'nome': 'Eleitor 02', 'email': 'email2@gmail.com', 'voto': 0},
-    {'nome': 'Eleitor 03', 'email': 'email3@gmail.com', 'voto': 0}
+    {'nome': 'Eleitor 01', 'email': '@1', 'voto': 0},
+    {'nome': 'Eleitor 02', 'email': '@2', 'voto': 0},
+    {'nome': 'Eleitor 03', 'email': '@3', 'voto': 0}
 ]
 
 candidatos = [
@@ -278,9 +286,9 @@ def calcFinal(passStop):
             for (key,value) in n_ordenado.items():
                 if value[1] != primeiro[2]: # Quando o valor atual for diferente do primeiro colocado, ele imprime e finaliza.
                     display(showVice, 'block')
-                    innerText(viceNome2, f'{key}')
-                    innerText(viceNumero2, f'{value[1]}')
-                    innerText(viceVotos2, f'{value[2]}')
+                    innerText(viceNome2, key)
+                    innerText(viceNumero2, value[1])
+                    innerText(viceVotos2, value[2])
                     break
 
     if ninguem_votou:
@@ -289,3 +297,11 @@ def calcFinal(passStop):
         innerText(showLastMsg, f'NÃO HOUVERAM ELEITORES, PORTANTO, O SISTEMA SELECIONOU POR IDADE OS CANDIDATOS VENCEDORES.\n\n')
     else:
         display(showLastThanks, 'block')
+
+    # Detalhes finais
+    countVotos = 0
+    for key in eleitores:
+        if key['voto'] != 0:
+            countVotos += 1
+    display(showTotalVotos, 'block')
+    innerText(msgTotalVotos, countVotos)

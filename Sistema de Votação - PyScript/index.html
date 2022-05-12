@@ -13,19 +13,29 @@
 </head>
 <body style="background-color:#781E20; color:#FFF">
     <py-script src="./poll.py"></py-script>
-    <main class="container mx-auto px-4">
+
+    <py-script>
+async def foo():
+    while True:
+        await asyncio.sleep(1)
+        Element("clock").element.innerText = now()
+
+foo()
+    </py-script>
+    <main class="container mx-auto px-6">
         <section>
             <center><img class="text-center" style="width: 25%; padding: 20px;" src="./img/deltaava_vassouras.png" alt="logo"></center>
             <div class="text-center w-full mb-8">
                 <h1 class="text-3xl font-bold uppercase" style="text-decoration: overline;">Sistema de Votação</h1>
                 <h3 style="text-decoration: overline;">Engenharia de Software 1º Período - Universidade de Vassouras - Maricá RJ</h3>
-                <h3 style="text-decoration: overline;">Framework utilizado: PyScript | Criador: Delta AVA | Versão: 1.5</h3>
+                <h3 style="text-decoration: overline;">Framework utilizado: PyScript | Criador: Delta AVA | Versão: 1.7</h3>
+                <span id="clock"></span>
             </div>
-            <span style="font-size: 13px;">Matrículas disponíveis para votação (apenas para testes):</span>
+            <span style="font-size: 13px;">Emails disponíveis para votação (apenas para testes):</span>
             <div style="border: 1px solid black; color: #000 !important; padding: 10px; background-color:#FFFFF0;" id="showEleitores"></div><br>
             <div class="text-center" id="showPollOk" style="display: none;" class="result"></div>
             <div class="text-center" id="boxConectar" style="display: block">
-                <label for="emailVoter">Para votar, informe a sua matrícula:</label><br>
+                <label for="emailVoter">Para votar, informe seu email cadastrado:</label><br>
                 <input style="color: #000 !important;" id="emailVoter" class="border flex-1 mr-3 border-gray-300 p-2 rounded" type="text">
                 <button id="conectar" class="p-2 text-white bg-blue-600 border border-blue-600 rounded" type="submit" pys-onClick="login">
                     Conectar
@@ -59,11 +69,14 @@
             </div>
             <br>
             <div id="showLastMsg" style="display: none;" class="text-center font-bold"></div>
+            <div id="showTotalVotos" style="display: none;" class="text-center font-bold">
+                Tivemos um total de <span id="msgTotalVotos" class="result"></span> voto(s) computado(s).<br>
+                <span style="font-size: 13px;">O critério de desempate é feito pela idade. O candidato que for mais velho terá vantagem na classificação.</span>
+            </div>
+            <br>
             <div id="showLastThanks" style="display: none;" class="text-center font-bold">
                 AQUI TERMINA A VOTAÇÃO!<br>Obrigado!
             </div>
-    
-            <div id="testando"></div>
         </section>
     </main>
 </body>
