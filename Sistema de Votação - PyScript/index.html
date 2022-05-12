@@ -80,4 +80,11 @@ foo()
         </section>
     </main>
 </body>
+<script>
+window.addEventListener('keydown', function (e) {
+    var code = e.which || e.keyCode;
+    if (code == 116) e.preventDefault();
+    else return true;
+});
+</script>
 </html>
