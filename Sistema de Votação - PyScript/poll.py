@@ -3,13 +3,20 @@
 '''
 
 import time, datetime
+import os
 from collections import Counter
 from datetime import datetime as dt
 # import sqlalchemy
 # print(sqlalchemy.__version__)
 
+# print(os.listdir("/"))
+
+# with open("leiame.txt") as f:
+#     lines = f.readlines()
+#     print(lines)
+
 # TENTANTIVA DE REDUZIR O CÓDIGO
-# A função Element() não funciona corretamente dentro do loop.
+# A class Element() não funciona corretamente dentro do loop.
 # getID = ['testando', 'emailVoter', 'showMsgEmail', 'showMsgEleitores', 'boxConectar', 'boxPoll', 'numCandidato', 'showMsgVote', 'showTime', 'showPollOk', 'showTitleEnd', 'showRepresentanteEVice', 'showRepresentante', 'showVice', 'showLastMsg', 'representanteNome', 'representanteNumero', 'representanteVotos', 'viceNome', 'viceNumero', 'viceVotos', 'showLastThanks', 'showEleitores']
 # for i in range(len(getID)):
 #     getID[i] = Element(getID[i])
