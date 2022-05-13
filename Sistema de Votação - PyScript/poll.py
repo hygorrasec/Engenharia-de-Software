@@ -2,10 +2,13 @@
     SISTEMA DE VOTAÇÃO
     Engenharia de Software 1º Período - Universidade de Vassouras - Maricá RJ
     Framework utilizado: PyScript | Criador: Delta AVA | Versão: 1.7
-    Alunos: Antony, Fabrício, Hygor, Kauã, Lucas, Victor
+    Alunos: Antony Martins Dias, Fabrício Souza, Hygor Rasec, Kauã Arruda Machado, Lucas Eduardo De Souza Soriano, Victor Bernardo Gomes De Tatagiba
     Update: 12/05/2022
 
     Instalar o Live Server para rodar a página.
+    Ou acessar o link provisório: https://hrpublicidades.com/sistemadevotacao
+
+    Repositório: https://bit.ly/SistemaDeVotacao
 '''
 
 import time, datetime
