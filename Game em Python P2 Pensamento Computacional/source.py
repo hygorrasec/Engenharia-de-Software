@@ -10,15 +10,15 @@ Versão: 1.5
 dados = []
 
 
-def login():
+def entrar():
     check = 0
-    print('LOGIN:\n')
+    print('ENTRAR:\n')
     email = input('Digite seu email: ')
     senha = input('Digite sua senha: ')
     for i in dados:
         if email == i[0]:
             if senha == i[1]:
-                print(f'\nVOCÊ LOGOU COM O EMAIL "{email}"!')
+                print(f'\nVOCÊ ENTROU COM O EMAIL "{email}"!')
                 print('Estamos em construção, volte em breve para conhecer o nosso jogo!')
                 print('Até logo!\n')
                 check = 1
@@ -46,7 +46,7 @@ def registro():
                     dados.append([email, senha])
                     print('\nRegistro realizado com sucesso!\n')
                     print(f'Registros: {dados}\n')
-                    menu()
+                    entrar()
                     break
                 else:
                     menu()
@@ -61,7 +61,7 @@ def menu():
     while True:
         print("""Digite um número de acordo com o que deseja fazer:
 
-    1 - Login
+    1 - Entrar
     2 - Criar uma nova conta
     3 - Sair
         """)
@@ -69,7 +69,7 @@ def menu():
         try:
             print('')
             if int(opc) == 1:
-                login()
+                entrar()
                 break
             elif int(opc) == 2:
                 registro()
@@ -86,7 +86,7 @@ def menu():
 def introducao():
     print("""
 Olá, jogador! Seja bem-vindo ao Delta AVA Game! Vamos iniciar sua jornada...
-Se você já tem uma jornada, digite 1 para logar. Caso seja um novo aventureiro, digite 2 para criar sua conta ou digite 3 para sair.
+Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureiro, digite 2 para criar sua conta ou digite 3 para sair.
        """)
     menu()
 
