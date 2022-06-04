@@ -21,7 +21,7 @@ def login():
                 print(f'\nVOCÊ LOGOU COM O EMAIL "{email}"!')
                 print('Estamos em construção, volte em breve para conhecer o nosso jogo!')
                 print('Até logo!\n')
-                check = 1  
+                check = 1
                 break
     if check == 0:
         print('\nNão encontramos nenhuma conta com esse registro.\n')

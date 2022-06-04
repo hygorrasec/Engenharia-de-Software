@@ -9,6 +9,7 @@ Repositório para Exercícios, Trabalhos e Projetos desenvolvidos por Hygor Rase
 
 **> Trabalho > Pensamento Computacional ESW01_B:**
  - Adicionado pasta com Sistema de Votação - PyScript. Criado em 07/05/2022.
+ - Adicionado pasta com Game em Python P2 Pensamento Computacional. Criado em 03/06/2022.
 
 **> Exercícios de Fixação:**
  - Adicionado arquivo com Exercícios de Fixação com Variáveis e Tipo de Dados em Python. Criado em 09/04/2022.
