@@ -4,49 +4,102 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 1.5
+Versão: 1.6
+
+====================================================
+
+INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
+
+# os.listdir() -> Listando arquivos e diretórios
+# os.chdir() -> Muda o diretório.
+# os.getcwd() -> Retorna o caminho absoludo.
+# os.path.join() -> Recebe dois parâmetros, sendo o primeiro diretório atual e o segundo o diretório que será juntado ao atual.
+
+# scanner = os.scandir('accounts')  # Listando arquivos e diretórios com mais detalhes
+# arquivos = list(scanner)
+# print(arquivos[0].inode())  # Identificador do elemento na árvore do diretório.
+# print(arquivos[0].is_dir())  # É um diretório?
+# print(arquivos[0].is_file())  # É um arquivo?
+# print(arquivos[0].is_symlink())  # É um link simbólico?
+# print(arquivos[0].name)  # Nome do arquivo.
+# print(arquivos[0].path)  # Caminho até o arquivo.
+# print(arquivos[0].stat())  # Estatísticas do arquivo.
+# scanner.close()  # Precisa fechar o scandir
+
 """
 
-dados = []
+# Manipulando arquivos do SO.
+import os
 
+extension_data = '.txt'
 
 def entrar():
-    check = 0
+    global password_ok
+    account_ok = 0
+    password_ok = 0
     print('ENTRAR:\n')
-    email = input('Digite seu email: ')
+    usuario = input('Digite seu usuário: ')
     senha = input('Digite sua senha: ')
-    for i in dados:
-        if email == i[0]:
-            if senha == i[1]:
-                print(f'\nVOCÊ ENTROU COM O EMAIL "{email}"!')
-                print('Estamos em construção, volte em breve para conhecer o nosso jogo!')
-                print('Até logo!\n')
-                check = 1
-                break
-    if check == 0:
+
+    for account in os.listdir('accounts'):
+        if usuario == account.split(extension_data)[0]:
+            account_ok = 1
+
+            os.chdir(os.path.join(os.getcwd(), 'accounts'))
+            with open(account) as arquivo:
+                if senha == arquivo.read().split(',')[1]:
+                    print(f'\nVOCÊ ENTROU COM O USUÁRIO: "{usuario}"!')
+                    print('Estamos em construção, volte em breve para conhecer o nosso jogo!')
+                    print('Até logo!\n')
+                    password_ok = 1
+
+            os.chdir('..')  # Voltar para o diretório raiz.  
+            break
+
+    if account_ok == 0:
         print('\nNão encontramos nenhuma conta com esse registro.\n')
         menu()
+    else:
+        if password_ok == 0:
+            print('\nVocê digitou uma senha errada.\n')
+            menu()
+
+
+def check_accounts():
+    accounts = []
+    
+    # Adicionada em uma lista provisória os usuários sem a extensão .txt
+    for account in os.listdir('accounts'):
+        accounts.append(account.split(extension_data)[0])
+
+    print(f'Total de accounts registradas: {len(accounts)}\nAccounts: {accounts}\n')
 
 
 def registro():
     while True:
         print('REGISTRO:\n')
         check = 0
-        email = input('Digite seu email: ')
+
+        check_accounts()
+
+        usuario = input('Digite seu usuário: ')
         senha = input('Digite sua senha: ')
-        if email != '':
+        if usuario != '':
             if senha != '':
-                for i in dados:
-                    if email == i[0]:
-                        print('\nE-mail já registrado.\n')
+                for account in os.listdir('accounts'):
+                    if usuario == account.split(extension_data)[0]:
+                        print('\nUsuário já registrado.\n')
                         check = 1
                         break
 
                 if check == 0:
-                    dados.append([email, senha])
+                    os.chdir(os.path.join(os.getcwd(), 'accounts'))  # Mudar para o diretório 'accounts'.
+                    with open(usuario + extension_data, 'w') as arquivo:
+                        arquivo.write(f'{usuario},{senha}')
+                    os.chdir('..')  # Voltar para o diretório raiz.
                     print('\nRegistro realizado com sucesso!\n')
-                    print(f'Registros: {dados}\n')
-                    entrar()
+                    check_accounts()
+                    menu()
                     break
                 else:
                     menu()
@@ -54,7 +107,7 @@ def registro():
             else:
                 print('\nPor favor, digite uma senha válida.\n')
         else:
-            print('\nPor favor, digite um email válido.\n')
+            print('\nPor favor, digite um usuário válido.\n')
 
 
 def menu():
