@@ -1,1 +1,0 @@
-{'username': 'flavia', 'password': '135', 'level': '1', 'health': '100', 'exp': '0', 'first': '1'}

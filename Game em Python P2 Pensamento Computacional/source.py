@@ -4,7 +4,7 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 1.7
+Versão: 1.8
 
 ====================================================
 
@@ -34,10 +34,11 @@ INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
 
 # Manipulando arquivos do SO.
 import os
+import random
 
 extension_data = '.txt'
 separator = ','
-data_default = {'username': '', 'password': '', 'level': '1', 'health': '100', 'exp': '0', 'first': '1'}
+data_default = {'username': '', 'password': '', 'level': 1, 'health': 100, 'exp': 0, 'first': 1}
 
 def entrar():
     global usuario
@@ -57,11 +58,11 @@ def entrar():
                     user_account = eval(arquivo.read())
                     user_password = user_account.get('password')
                     user_username = user_account.get('username')
-                    if senha == user_password:
+                    if int(senha) == user_password:
                         print(f'\nVOCÊ ENTROU COM O USUÁRIO: {user_username}!\n')
                         password_ok = 1
 
-                os.chdir('..')  # Voltar para o diretório raiz.  
+                os.chdir('..')  
                 break
 
         if account_ok == 0:
@@ -109,13 +110,13 @@ def registro():
                             break
 
                     if check == 0:
-                        os.chdir(os.path.join(os.getcwd(), 'accounts'))  # Mudar para o diretório 'accounts'.
+                        os.chdir(os.path.join(os.getcwd(), 'accounts'))
                         with open(usuario + extension_data, 'w') as arquivo:
                             data_default['username'] = usuario
                             data_default['password'] = senha
                             arquivo.write(f'{data_default}')
 
-                        os.chdir('..')  # Voltar para o diretório raiz.
+                        os.chdir('..')
                         print('\nRegistro realizado com sucesso!\n')
                         check_accounts()
                         menu()
@@ -165,42 +166,101 @@ Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureir
     menu()
 
 
-def game():
-    cache = 0
-    # Verificar se os dados estão ok.
+def read_file():
+    global user_account
     for account in os.listdir('accounts'):
         if usuario == account.split(extension_data)[0]:
-            os.chdir(os.path.join(os.getcwd(), 'accounts'))  # Mudar para o diretório 'accounts'.
+            os.chdir(os.path.join(os.getcwd(), 'accounts'))
             with open(account) as arquivo:
                 user_account = eval(arquivo.read())
-                user_username = user_account.get('username')
 
-                for k, v in data_default.items():
-                    if k not in user_account.keys():
-                        user_account[k] = v
-                        print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
-                        cache = 1
+            os.chdir('..')
 
-                if cache:
-                    with open(usuario + extension_data, 'w') as arquivo:
-                        arquivo.write(f'{user_account}')
-                        print('Dados Default foram atualizados.\n')
+    return user_account
 
-            os.chdir('..')  # Voltar para o diretório raiz.
 
+def battle():
+    enemy_names = ["Dragão", "Morcego", "Cobra"]
+    enemy = random.choice(enemy_names)
+    enemy_health = random.randrange(100, 300, 50)
+    dmg_player = random.randint(10, 100)
+    dmg_enemy = random.randint(5, 20)
+
+    read_file()
+    health_player = int(user_account.get('health'))
+    player_new_health = health_player-dmg_enemy
+
+    print(f'Você encontrou um {enemy} com {enemy_health} de vida!')
+    print(f'=========================================')
+    print(f'Seu dano no(a) {enemy} foi {dmg_player} e ele(a) ficou com {enemy_health-dmg_player}.')
+    print(f'O(a) {enemy} te deu um dano de {dmg_enemy}.\n')
+    print(f'=========================================')
+    print(f'Sua vida era {health_player} e passou a ser {player_new_health}.\n')
+
+    user_account['health'] = player_new_health
+
+    update_data()
+
+
+def status_player():
     print('Status do seu personagem:')
     print('=========================')
+
+    read_file()
     for k, v in user_account.items():
         print(f'{k}: {v}')
 
     print('')
+
+
+def update_data():
+    for account in os.listdir('accounts'):
+        if usuario == account.split(extension_data)[0]:
+            os.chdir(os.path.join(os.getcwd(), 'accounts'))
+            with open(usuario + extension_data, 'w') as arquivo:
+                arquivo.write(f'{user_account}')
+
+            os.chdir('..')
+
+
+def game():
+    cache = 0
+    # Verificar se os dados estão ok.
+    read_file()
+
+    for k, v in data_default.items():
+        if k not in user_account.keys():
+            user_account[k] = v
+            print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
+            cache = 1
+
+    if cache:
+        update_data()
+        print('Dados Default foram atualizados.\n')
+
+    status_player()
+
     while True:
-        text = input(f'Player {user_username}, digite algo. Para sair, digite "sair": ')
-        if text != 'sair':
-            print(f'Você digitou: {text}\n')
-        else:
-            menu()
-            break
+        print("""Você está no jogo, escolha o que deseja fazer:
+
+    1 - Status
+    2 - Procurar batalha
+    3 - Sair
+        """)
+        opc = input('Escolha uma das opções: ')
+        try:
+            print('')
+            if int(opc) == 1:
+                status_player()
+            elif int(opc) == 2:
+                battle()
+            elif int(opc) == 3:
+                print('Até a próxima!\n')
+                break
+        
+        except ValueError as err: 
+            if opc != 1 or opc != 2 or opc != 3 or err:
+                print('Por favor digite apenas os numeros apresentados no menu.\n')
 
 
 introducao()
