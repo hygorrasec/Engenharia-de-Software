@@ -1,1 +1,1 @@
-hygor,123
+{'username': 'hygor', 'password': '123', 'level': '1', 'health': '100', 'exp': '0', 'first': '1'}

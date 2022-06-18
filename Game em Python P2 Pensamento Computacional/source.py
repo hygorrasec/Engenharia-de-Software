@@ -4,7 +4,7 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 1.6
+Versão: 1.7
 
 ====================================================
 
@@ -14,6 +14,10 @@ INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
 # os.chdir() -> Muda o diretório.
 # os.getcwd() -> Retorna o caminho absoludo.
 # os.path.join() -> Recebe dois parâmetros, sendo o primeiro diretório atual e o segundo o diretório que será juntado ao atual.
+# eval() -> Converte string em formato de lista para uma lista real.
+
+# dicionario = {}
+# dicionario['chave'] = 'valor' -> Adiciona ou atualiza um dado no dicionário.
 
 # scanner = os.scandir('accounts')  # Listando arquivos e diretórios com mais detalhes
 # arquivos = list(scanner)
@@ -32,37 +36,48 @@ INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
 import os
 
 extension_data = '.txt'
+separator = ','
+data_default = {'username': '', 'password': '', 'level': '1', 'health': '100', 'exp': '0', 'first': '1'}
 
 def entrar():
-    global password_ok
+    global usuario
     account_ok = 0
     password_ok = 0
     print('ENTRAR:\n')
     usuario = input('Digite seu usuário: ')
     senha = input('Digite sua senha: ')
 
-    for account in os.listdir('accounts'):
-        if usuario == account.split(extension_data)[0]:
-            account_ok = 1
+    try:
+        for account in os.listdir('accounts'):
+            if usuario == account.split(extension_data)[0]:
+                account_ok = 1
 
-            os.chdir(os.path.join(os.getcwd(), 'accounts'))
-            with open(account) as arquivo:
-                if senha == arquivo.read().split(',')[1]:
-                    print(f'\nVOCÊ ENTROU COM O USUÁRIO: "{usuario}"!')
-                    print('Estamos em construção, volte em breve para conhecer o nosso jogo!')
-                    print('Até logo!\n')
-                    password_ok = 1
+                os.chdir(os.path.join(os.getcwd(), 'accounts'))
+                with open(account) as arquivo:
+                    user_account = eval(arquivo.read())
+                    user_password = user_account.get('password')
+                    user_username = user_account.get('username')
+                    if senha == user_password:
+                        print(f'\nVOCÊ ENTROU COM O USUÁRIO: {user_username}!\n')
+                        password_ok = 1
 
-            os.chdir('..')  # Voltar para o diretório raiz.  
-            break
+                os.chdir('..')  # Voltar para o diretório raiz.  
+                break
 
-    if account_ok == 0:
+        if account_ok == 0:
+            print('\nNão encontramos nenhuma conta com esse registro.\n')
+            menu()
+        else:
+            if password_ok == 0:
+                print('\nVocê digitou uma senha errada.\n')
+                menu()
+            else:
+                game()
+
+    except FileNotFoundError as err:
+        os.mkdir('accounts')
         print('\nNão encontramos nenhuma conta com esse registro.\n')
         menu()
-    else:
-        if password_ok == 0:
-            print('\nVocê digitou uma senha errada.\n')
-            menu()
 
 
 def check_accounts():
@@ -77,38 +92,44 @@ def check_accounts():
 
 def registro():
     while True:
-        print('REGISTRO:\n')
-        check = 0
+        try:
+            print('REGISTRO:\n')
+            check = 0
 
-        check_accounts()
+            check_accounts()
 
-        usuario = input('Digite seu usuário: ')
-        senha = input('Digite sua senha: ')
-        if usuario != '':
-            if senha != '':
-                for account in os.listdir('accounts'):
-                    if usuario == account.split(extension_data)[0]:
-                        print('\nUsuário já registrado.\n')
-                        check = 1
+            usuario = input('Digite seu usuário: ')
+            senha = input('Digite sua senha: ')
+            if usuario != '':
+                if senha != '':
+                    for account in os.listdir('accounts'):
+                        if usuario == account.split(extension_data)[0]:
+                            print('\nUsuário já registrado.\n')
+                            check = 1
+                            break
+
+                    if check == 0:
+                        os.chdir(os.path.join(os.getcwd(), 'accounts'))  # Mudar para o diretório 'accounts'.
+                        with open(usuario + extension_data, 'w') as arquivo:
+                            data_default['username'] = usuario
+                            data_default['password'] = senha
+                            arquivo.write(f'{data_default}')
+
+                        os.chdir('..')  # Voltar para o diretório raiz.
+                        print('\nRegistro realizado com sucesso!\n')
+                        check_accounts()
+                        menu()
                         break
-
-                if check == 0:
-                    os.chdir(os.path.join(os.getcwd(), 'accounts'))  # Mudar para o diretório 'accounts'.
-                    with open(usuario + extension_data, 'w') as arquivo:
-                        arquivo.write(f'{usuario},{senha}')
-                    os.chdir('..')  # Voltar para o diretório raiz.
-                    print('\nRegistro realizado com sucesso!\n')
-                    check_accounts()
-                    menu()
-                    break
+                    else:
+                        menu()
+                        break
                 else:
-                    menu()
-                    break
+                    print('\nPor favor, digite uma senha válida.\n')
             else:
-                print('\nPor favor, digite uma senha válida.\n')
-        else:
-            print('\nPor favor, digite um usuário válido.\n')
-
+                print('\nPor favor, digite um usuário válido.\n')
+        except FileNotFoundError as err:
+            os.mkdir('accounts')
+        
 
 def menu():
     while True:
@@ -137,11 +158,49 @@ def menu():
 
 
 def introducao():
-    print("""
+    print('''
 Olá, jogador! Seja bem-vindo ao Delta AVA Game! Vamos iniciar sua jornada...
 Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureiro, digite 2 para criar sua conta ou digite 3 para sair.
-       """)
+       ''')
     menu()
+
+
+def game():
+    cache = 0
+    # Verificar se os dados estão ok.
+    for account in os.listdir('accounts'):
+        if usuario == account.split(extension_data)[0]:
+            os.chdir(os.path.join(os.getcwd(), 'accounts'))  # Mudar para o diretório 'accounts'.
+            with open(account) as arquivo:
+                user_account = eval(arquivo.read())
+                user_username = user_account.get('username')
+
+                for k, v in data_default.items():
+                    if k not in user_account.keys():
+                        user_account[k] = v
+                        print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
+                        cache = 1
+
+                if cache:
+                    with open(usuario + extension_data, 'w') as arquivo:
+                        arquivo.write(f'{user_account}')
+                        print('Dados Default foram atualizados.\n')
+
+            os.chdir('..')  # Voltar para o diretório raiz.
+
+    print('Status do seu personagem:')
+    print('=========================')
+    for k, v in user_account.items():
+        print(f'{k}: {v}')
+
+    print('')
+    while True:
+        text = input(f'Player {user_username}, digite algo. Para sair, digite "sair": ')
+        if text != 'sair':
+            print(f'Você digitou: {text}\n')
+        else:
+            menu()
+            break
 
 
 introducao()

@@ -1,1 +1,1 @@
-amara,123
+{'username': 'amara', 'password': '321', 'level': '1', 'health': '100', 'exp': '0', 'first': '1'}
