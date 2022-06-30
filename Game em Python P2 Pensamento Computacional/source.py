@@ -58,7 +58,7 @@ def entrar():
                     user_account = eval(arquivo.read())
                     user_password = user_account.get('password')
                     user_username = user_account.get('username')
-                    if int(senha) == user_password:
+                    if int(senha) == int(user_password):
                         print(f'\nVOCÊ ENTROU COM O USUÁRIO: {user_username}!\n')
                         password_ok = 1
 
@@ -181,23 +181,39 @@ def read_file():
 
 def battle():
     enemy_names = ["Dragão", "Morcego", "Cobra"]
+    enemy_names = [
+                    {'name': 'Dragão', 'health': '100', 'exp': '1000', 'atk': '20', 'pre': 'no'},
+                    {'name': 'Cobra', 'health': '50', 'exp': '500', 'atk': '10', 'pre': 'na'},
+                    {'name': 'Morcego', 'health': '60', 'exp': '600', 'atk': '12', 'pre': 'no'}
+                    ]
+
     enemy = random.choice(enemy_names)
-    enemy_health = random.randrange(100, 300, 50)
+
+    enemy_name = enemy['name']
+    enemy_health = int(enemy['health'])
+    dmg_enemy = int(enemy['atk'])
+    exp_enemy = int(enemy['exp'])
+    pre_enemy = enemy['pre']
     dmg_player = random.randint(10, 100)
-    dmg_enemy = random.randint(5, 20)
+    new_health_monster = enemy_health-dmg_player
+    if new_health_monster <= 0:
+        new_health_monster = 0
 
     read_file()
     health_player = int(user_account.get('health'))
+    exp_player = int(user_account.get('exp'))
     player_new_health = health_player-dmg_enemy
+    player_new_exp = exp_player + exp_enemy
 
-    print(f'Você encontrou um {enemy} com {enemy_health} de vida!')
+    print(f'Você encontrou um {enemy_name} com {enemy_health} de vida!')
     print(f'=========================================')
-    print(f'Seu dano no(a) {enemy} foi {dmg_player} e ele(a) ficou com {enemy_health-dmg_player}.')
-    print(f'O(a) {enemy} te deu um dano de {dmg_enemy}.\n')
+    print(f'Seu dano {pre_enemy} {enemy_name} foi {dmg_player} e ele(a) ficou com {new_health_monster}.')
+    print(f'O(a) {enemy_name} te deu um dano de {dmg_enemy}.\n')
     print(f'=========================================')
-    print(f'Sua vida era {health_player} e passou a ser {player_new_health}.\n')
+    print(f'Sua vida era {health_player} e passou a ser {player_new_health}. Você ganhou {player_new_exp} de experiência.\n')
 
     user_account['health'] = player_new_health
+    user_account['exp'] = player_new_exp
 
     update_data()
 

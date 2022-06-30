@@ -1,1 +1,1 @@
-{'username': 'hygor', 'password': 123, 'level': 1, 'health': 100, 'exp': 0, 'first': 1}
+{'username': 'hygor', 'password': 123, 'level': 1, 'health': -1219, 'exp': 10600, 'first': 1}
