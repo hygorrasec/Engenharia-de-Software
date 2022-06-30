@@ -38,7 +38,7 @@ import random
 
 extension_data = '.txt'
 separator = ','
-data_default = {'username': '', 'password': '', 'level': 1, 'health': 100, 'exp': 0, 'first': 1}
+data_default = {'username': '', 'password': '', 'level': '1', 'health': '100', 'exp': '0', 'first': '1', 'atkMin': '10', 'atkMax': '20'}
 
 def entrar():
     global usuario
@@ -180,42 +180,46 @@ def read_file():
 
 
 def battle():
-    enemy_names = ["Dragão", "Morcego", "Cobra"]
-    enemy_names = [
-                    {'name': 'Dragão', 'health': '100', 'exp': '1000', 'atk': '20', 'pre': 'no'},
-                    {'name': 'Cobra', 'health': '50', 'exp': '500', 'atk': '10', 'pre': 'na'},
-                    {'name': 'Morcego', 'health': '60', 'exp': '600', 'atk': '12', 'pre': 'no'}
-                    ]
+    enemy = random.choice([
+                    {'name': 'Dragão', 'pre': 'no', 'health': '100', 'exp': '1000', 'atk': '20'},
+                    {'name': 'Cobra', 'pre': 'na', 'health': '50', 'exp': '500', 'atk': '10'},
+                    {'name': 'Morcego', 'pre': 'no', 'health': '60', 'exp': '600', 'atk': '12'}
+                  ])
 
-    enemy = random.choice(enemy_names)
-
-    enemy_name = enemy['name']
-    enemy_health = int(enemy['health'])
-    dmg_enemy = int(enemy['atk'])
-    exp_enemy = int(enemy['exp'])
-    pre_enemy = enemy['pre']
-    dmg_player = random.randint(10, 100)
-    new_health_monster = enemy_health-dmg_player
-    if new_health_monster <= 0:
-        new_health_monster = 0
-
-    read_file()
-    health_player = int(user_account.get('health'))
-    exp_player = int(user_account.get('exp'))
-    player_new_health = health_player-dmg_enemy
-    player_new_exp = exp_player + exp_enemy
-
-    print(f'Você encontrou um {enemy_name} com {enemy_health} de vida!')
+    print(f'Você encontrou um {enemy["name"]} com {int(enemy["health"])} de vida!')
     print(f'=========================================')
-    print(f'Seu dano {pre_enemy} {enemy_name} foi {dmg_player} e ele(a) ficou com {new_health_monster}.')
-    print(f'O(a) {enemy_name} te deu um dano de {dmg_enemy}.\n')
-    print(f'=========================================')
-    print(f'Sua vida era {health_player} e passou a ser {player_new_health}. Você ganhou {player_new_exp} de experiência.\n')
 
-    user_account['health'] = player_new_health
-    user_account['exp'] = player_new_exp
+    # Continuar configuração para primeiro ataque
+    turn = ['enemy', 'player']
+    if turn[random.randrange(len(turn))] == 'player':
+        while True:
+            read_file()
+            player_health = int(user_account.get('health'))
+            player_exp = int(user_account.get('exp'))
+            player_atkMin = int(user_account.get('atkMin'))
+            player_atkMax = int(user_account.get('atkMax'))
+            player_dmg = random.randint(player_atkMin, player_atkMax)
+            enemy_new_health = int(enemy["health"]) - player_dmg
+            if enemy_new_health <= 0:
+                enemy_new_health = 0
+                print(f'Seu dano {enemy["pre"]} {enemy["name"]} foi {player_dmg} e você o matou.')
+                break
+            else:
+                print(f'Seu dano {enemy["pre"]} {enemy["name"]} foi {player_dmg} e deixou com {enemy_new_health} de vida.')
 
-    update_data()
+            player_new_health = player_health - int(enemy['atk'])
+            player_new_exp = player_exp + int(enemy["exp"])
+
+            print(f'O(a) {enemy["name"]} te deu um dano de {int(enemy["atk"])}.\n')
+            print(f'=========================================')
+            print(f'Sua vida era {player_health} e passou a ser {player_new_health}. Você ganhou {int(enemy["exp"])} de experiência.\n')
+
+            user_account['health'] = player_new_health
+            user_account['exp'] = player_new_exp
+            update_data()
+
+            # BREAK PROVISÓRIO PARA INTERROMPER O LOOP INFINITO
+            break
 
 
 def status_player():
