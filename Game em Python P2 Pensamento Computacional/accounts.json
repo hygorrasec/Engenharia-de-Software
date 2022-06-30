@@ -1,0 +1,32 @@
+[
+    {
+        "username": "hygor",
+        "password": "123",
+        "level": "1",
+        "health": "100",
+        "exp": "0",
+        "first": "1",
+        "atkMin": "10",
+        "atkMax": "20"
+    },
+    {
+        "username": "amara",
+        "password": "123",
+        "level": "1",
+        "health": "100",
+        "exp": "0",
+        "first": "1",
+        "atkMin": "10",
+        "atkMax": "20"
+    },
+    {
+        "username": "flavia",
+        "password": "123",
+        "level": "1",
+        "health": "100",
+        "exp": "0",
+        "first": "1",
+        "atkMin": "10",
+        "atkMax": "20"
+    }
+]

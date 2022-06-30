@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Dragão",
+        "pre1": "no",
+        "pre2": "um",
+        "health": 100,
+        "exp": 1000,
+        "atk": 20
+    },
+    {
+        "name": "Cobra",
+        "pre1": "na",
+        "pre2": "uma",
+        "health": 50,
+        "exp": 500,
+        "atk": 10
+    },
+    {
+        "name": "Morcego",
+        "pre1": "no",
+        "pre2": "um",
+        "health": 60,
+        "exp": 600,
+        "atk": 12
+    }
+]

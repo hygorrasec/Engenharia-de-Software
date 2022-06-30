@@ -9,12 +9,20 @@ Versão: 1.8
 ====================================================
 
 INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
+# from os import listdir, chdir, getcwd
+# from os.path import join
 
-# os.listdir() -> Listando arquivos e diretórios
-# os.chdir() -> Muda o diretório.
-# os.getcwd() -> Retorna o caminho absoludo.
-# os.path.join() -> Recebe dois parâmetros, sendo o primeiro diretório atual e o segundo o diretório que será juntado ao atual.
+# listdir() -> Listando arquivos e diretórios
+# chdir() -> Muda o diretório.
+# getcwd() -> Retorna o caminho absoludo.
+# join() -> Recebe dois parâmetros, sendo o primeiro diretório atual e o segundo o diretório que será juntado ao atual.
 # eval() -> Converte string em formato de lista para uma lista real.
+
+# LISTAR APENAS ARQUIVOS
+# from os import listdir
+# from os.path import isfile, join
+# onlyfiles = [f for f in listdir(getcwd()) if isfile(join(getcwd(), f))]
+# print(onlyfiles)
 
 # dicionario = {}
 # dicionario['chave'] = 'valor' -> Adiciona ou atualiza um dado no dicionário.
@@ -33,12 +41,19 @@ INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
 """
 
 # Manipulando arquivos do SO.
-import os
-import random
+from random import choice, randrange, randint
+import json
 
-extension_data = '.txt'
-separator = ','
-data_default = {'username': '', 'password': '', 'level': '1', 'health': '100', 'exp': '0', 'first': '1', 'atkMin': '10', 'atkMax': '20'}
+data_default = {
+                    'username': '',
+                    'password': '',
+                    'level': '1',
+                    'health': '100',
+                    'exp': '0',
+                    'first': '1',
+                    'atkMin': '10',
+                    'atkMax': '20'
+                }
 
 def entrar():
     global usuario
@@ -48,92 +63,87 @@ def entrar():
     usuario = input('Digite seu usuário: ')
     senha = input('Digite sua senha: ')
 
-    try:
-        for account in os.listdir('accounts'):
-            if usuario == account.split(extension_data)[0]:
-                account_ok = 1
+    with open('accounts.json', encoding='utf-8') as acc:
+        accounts = json.load(acc)
 
-                os.chdir(os.path.join(os.getcwd(), 'accounts'))
-                with open(account) as arquivo:
-                    user_account = eval(arquivo.read())
-                    user_password = user_account.get('password')
-                    user_username = user_account.get('username')
-                    if int(senha) == int(user_password):
-                        print(f'\nVOCÊ ENTROU COM O USUÁRIO: {user_username}!\n')
-                        password_ok = 1
-
-                os.chdir('..')  
+    for account in accounts:
+        if usuario.lower() == account['username'].lower():
+            account_ok = 1
+            if int(senha) == int(account['password']):
+                print(f'\nVOCÊ ENTROU COM O USUÁRIO: {account["username"]}!\n')
+                password_ok = 1
                 break
 
-        if account_ok == 0:
-            print('\nNão encontramos nenhuma conta com esse registro.\n')
-            menu()
-        else:
-            if password_ok == 0:
-                print('\nVocê digitou uma senha errada.\n')
-                menu()
-            else:
-                game()
-
-    except FileNotFoundError as err:
-        os.mkdir('accounts')
+    if account_ok == 0:
         print('\nNão encontramos nenhuma conta com esse registro.\n')
         menu()
+    else:
+        if password_ok == 0:
+            print('\nVocê digitou uma senha errada.\n')
+            menu()
+        else:
+            game()
 
 
 def check_accounts():
-    accounts = []
+    '''Quando vazio, iniciar o accounts.json com uma lista vazia.'''
+    account_list = []
     
-    # Adicionada em uma lista provisória os usuários sem a extensão .txt
-    for account in os.listdir('accounts'):
-        accounts.append(account.split(extension_data)[0])
+    with open('accounts.json', encoding='utf-8') as acc:
+        accounts = json.load(acc)
 
-    print(f'Total de accounts registradas: {len(accounts)}\nAccounts: {accounts}\n')
+    for account in accounts:
+        account_list.append(account['username'])
+    
+    print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}\n')
 
 
 def registro():
     while True:
-        try:
-            print('REGISTRO:\n')
-            check = 0
+        print('REGISTRO:\n')
+        check = 0
 
-            check_accounts()
+        check_accounts()
 
-            usuario = input('Digite seu usuário: ')
-            senha = input('Digite sua senha: ')
-            if usuario != '':
-                if senha != '':
-                    for account in os.listdir('accounts'):
-                        if usuario == account.split(extension_data)[0]:
-                            print('\nUsuário já registrado.\n')
-                            check = 1
-                            break
+        usuario = input('Digite seu usuário: ')
+        senha = input('Digite sua senha: ')
+        if usuario != '':
+            if senha != '':
+                with open('accounts.json', encoding='utf-8') as acc:
+                    accounts = json.load(acc)
 
-                    if check == 0:
-                        os.chdir(os.path.join(os.getcwd(), 'accounts'))
-                        with open(usuario + extension_data, 'w') as arquivo:
-                            data_default['username'] = usuario
-                            data_default['password'] = senha
-                            arquivo.write(f'{data_default}')
+                for account in accounts:
+                    if usuario.lower() == account['username'].lower():
+                        print('\nATENÇÃO! Usuário já registrado. Tente outro nome.\n')
+                        check = 1
 
-                        os.chdir('..')
-                        print('\nRegistro realizado com sucesso!\n')
-                        check_accounts()
-                        menu()
-                        break
-                    else:
-                        menu()
-                        break
+                if check == 0:
+                    with open('accounts.json', encoding='utf-8') as acc:
+                        accounts = json.load(acc)
+
+                    data_default['username'] = usuario
+                    data_default['password'] = senha
+                    accounts.append(data_default)
+
+                    with open('accounts.json', "w", encoding="utf-8") as acc:
+                        json.dump(accounts, acc, ensure_ascii=False, indent=4, separators=(",", ": ")) 
+
+                    print('\nRegistro realizado com sucesso!\n')
+                    check_accounts()
+                    menu()
+                    break
                 else:
-                    print('\nPor favor, digite uma senha válida.\n')
+                    menu()
+                    break
             else:
-                print('\nPor favor, digite um usuário válido.\n')
-        except FileNotFoundError as err:
-            os.mkdir('accounts')
-        
+                print('\nPor favor, digite uma senha válida.\n')
+        else:
+            print('\nPor favor, digite um usuário válido.\n')
+
 
 def menu():
     while True:
+        opc = ""
         print("""Digite um número de acordo com o que deseja fazer:
 
     1 - Entrar
@@ -166,39 +176,58 @@ Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureir
     menu()
 
 
-def read_file():
+def read_accounts():
     global user_account
-    for account in os.listdir('accounts'):
-        if usuario == account.split(extension_data)[0]:
-            os.chdir(os.path.join(os.getcwd(), 'accounts'))
-            with open(account) as arquivo:
-                user_account = eval(arquivo.read())
+    with open('accounts.json', encoding='utf-8') as acc:
+        accounts = json.load(acc)
 
-            os.chdir('..')
+    for account in accounts:
+        if usuario.lower() == account['username'].lower():
+            user_account = account
+            break
 
     return user_account
 
 
-def battle():
-    enemy = random.choice([
-                    {'name': 'Dragão', 'pre': 'no', 'health': '100', 'exp': '1000', 'atk': '20'},
-                    {'name': 'Cobra', 'pre': 'na', 'health': '50', 'exp': '500', 'atk': '10'},
-                    {'name': 'Morcego', 'pre': 'no', 'health': '60', 'exp': '600', 'atk': '12'}
-                  ])
+def read_enemies():
+    with open('enemies.json', encoding='utf-8') as en:
+        enemies = json.load(en)
 
-    print(f'Você encontrou um {enemy["name"]} com {int(enemy["health"])} de vida!')
+    return enemies
+
+
+def search_battle():
+    global enemy
+    enemy = choice(read_enemies())
+
+    print(f'Você acabou de encontrar {enemy["pre2"]} {enemy["name"]}!')
     print(f'=========================================')
 
-    # Continuar configuração para primeiro ataque
+    fight = input('Deseja continuar com esta batalha? (S para sim ou N para não): ')
+    try:
+        print('')
+        if fight.upper() == 'S':
+            # battle()
+            print('ESTAMOS EM CONSTRUÇÃO...')
+            game()
+        elif fight.upper() == 'N':
+            game()
+    
+    except ValueError as err: 
+        if fight.upper() != 'N' or fight.upper() != 'S' or err:
+            print('Por favor digite apenas as letras apresentadas no menu.\n')
+
+
+def battle():
     turn = ['enemy', 'player']
-    if turn[random.randrange(len(turn))] == 'player':
+    if turn[randrange(len(turn))] == 'player':
         while True:
-            read_file()
-            player_health = int(user_account.get('health'))
-            player_exp = int(user_account.get('exp'))
-            player_atkMin = int(user_account.get('atkMin'))
-            player_atkMax = int(user_account.get('atkMax'))
-            player_dmg = random.randint(player_atkMin, player_atkMax)
+            read_accounts()
+            player_health = user_account['health']
+            player_exp = user_account['exp']
+            player_atkMin = user_account['atkMin']
+            player_atkMax = user_account['atkMax']
+            player_dmg = randint(player_atkMin, player_atkMax)
             enemy_new_health = int(enemy["health"]) - player_dmg
             if enemy_new_health <= 0:
                 enemy_new_health = 0
@@ -216,7 +245,7 @@ def battle():
 
             user_account['health'] = player_new_health
             user_account['exp'] = player_new_exp
-            update_data()
+
 
             # BREAK PROVISÓRIO PARA INTERROMPER O LOOP INFINITO
             break
@@ -226,37 +255,37 @@ def status_player():
     print('Status do seu personagem:')
     print('=========================')
 
-    read_file()
+    read_accounts()
     for k, v in user_account.items():
         print(f'{k}: {v}')
 
     print('')
 
 
-def update_data():
-    for account in os.listdir('accounts'):
-        if usuario == account.split(extension_data)[0]:
-            os.chdir(os.path.join(os.getcwd(), 'accounts'))
-            with open(usuario + extension_data, 'w') as arquivo:
-                arquivo.write(f'{user_account}')
+# def update_data():
+#     for account in listdir('accounts'):
+#         if usuario == account.split(extension_data)[0]:
+#             chdir(join(getcwd(), 'accounts'))
+#             with open(usuario + extension_data, 'w') as arquivo:
+#                 arquivo.write(f'{user_account}')
 
-            os.chdir('..')
+#             chdir('..')
 
 
 def game():
-    cache = 0
+    # cache = 0
     # Verificar se os dados estão ok.
-    read_file()
+    # read_accounts()
 
-    for k, v in data_default.items():
-        if k not in user_account.keys():
-            user_account[k] = v
-            print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
-            cache = 1
+    # for k, v in data_default.items():
+    #     if k not in user_account.keys():
+    #         user_account[k] = v
+    #         print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
+    #         cache = 1
 
-    if cache:
-        update_data()
-        print('Dados Default foram atualizados.\n')
+    # if cache:
+    #     update_data()
+    #     print('Dados Default foram atualizados.\n')
 
     status_player()
 
@@ -273,7 +302,7 @@ def game():
             if int(opc) == 1:
                 status_player()
             elif int(opc) == 2:
-                battle()
+                search_battle()
             elif int(opc) == 3:
                 print('Até a próxima!\n')
                 break
