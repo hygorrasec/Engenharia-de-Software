@@ -4,7 +4,7 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 1.8
+Versão: 2.0
 
 ====================================================
 
@@ -40,107 +40,48 @@ INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
 
 """
 
-# Manipulando arquivos do SO.
 from random import choice, randrange, randint
-import json
+from json import dump, load
+from os import stat
 
+accounts_file = 'accounts.json'
+enemies_file = 'enemies.json'
 data_default = {
                     'username': '',
                     'password': '',
-                    'level': '1',
-                    'health': '100',
-                    'exp': '0',
-                    'first': '1',
-                    'atkMin': '10',
-                    'atkMax': '20'
+                    'level': 1,
+                    'health': 100,
+                    'exp': 0,
+                    'first': 1,
+                    'atkMin': 10,
+                    'atkMax': 20,
+                    'healthPotion': 1000
                 }
 
-def entrar():
-    global usuario
-    account_ok = 0
-    password_ok = 0
-    print('ENTRAR:\n')
-    usuario = input('Digite seu usuário: ')
-    senha = input('Digite sua senha: ')
 
-    with open('accounts.json', encoding='utf-8') as acc:
-        accounts = json.load(acc)
+"""
+██╗███╗   ██╗████████╗██████╗  ██████╗ ██████╗ ██╗   ██╗ ██████╗ █████╗  ██████╗ 
+██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██╔══██╗██║   ██║██╔════╝██╔══██╗██╔═══██╗
+██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║  ██║██║   ██║██║     ███████║██║   ██║
+██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║  ██║██║   ██║██║     ██╔══██║██║   ██║
+██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝██████╔╝╚██████╔╝╚██████╗██║  ██║╚██████╔╝
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝ ╚═════╝                                                                                
+"""
+def introducao():
+    print('''
+Olá, jogador! Seja bem-vindo ao Delta AVA Game! Vamos iniciar sua jornada...
+Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureiro, digite 2 para criar sua conta ou digite 3 para sair.
+       ''')
+    menu()
 
-    for account in accounts:
-        if usuario.lower() == account['username'].lower():
-            account_ok = 1
-            if int(senha) == int(account['password']):
-                print(f'\nVOCÊ ENTROU COM O USUÁRIO: {account["username"]}!\n')
-                password_ok = 1
-                break
-
-    if account_ok == 0:
-        print('\nNão encontramos nenhuma conta com esse registro.\n')
-        menu()
-    else:
-        if password_ok == 0:
-            print('\nVocê digitou uma senha errada.\n')
-            menu()
-        else:
-            game()
-
-
-def check_accounts():
-    '''Quando vazio, iniciar o accounts.json com uma lista vazia.'''
-    account_list = []
-    
-    with open('accounts.json', encoding='utf-8') as acc:
-        accounts = json.load(acc)
-
-    for account in accounts:
-        account_list.append(account['username'])
-    
-    print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}\n')
-
-
-def registro():
-    while True:
-        print('REGISTRO:\n')
-        check = 0
-
-        check_accounts()
-
-        usuario = input('Digite seu usuário: ')
-        senha = input('Digite sua senha: ')
-        if usuario != '':
-            if senha != '':
-                with open('accounts.json', encoding='utf-8') as acc:
-                    accounts = json.load(acc)
-
-                for account in accounts:
-                    if usuario.lower() == account['username'].lower():
-                        print('\nATENÇÃO! Usuário já registrado. Tente outro nome.\n')
-                        check = 1
-
-                if check == 0:
-                    with open('accounts.json', encoding='utf-8') as acc:
-                        accounts = json.load(acc)
-
-                    data_default['username'] = usuario
-                    data_default['password'] = senha
-                    accounts.append(data_default)
-
-                    with open('accounts.json', "w", encoding="utf-8") as acc:
-                        json.dump(accounts, acc, ensure_ascii=False, indent=4, separators=(",", ": ")) 
-
-                    print('\nRegistro realizado com sucesso!\n')
-                    check_accounts()
-                    menu()
-                    break
-                else:
-                    menu()
-                    break
-            else:
-                print('\nPor favor, digite uma senha válida.\n')
-        else:
-            print('\nPor favor, digite um usuário válido.\n')
-
-
+'''
+███╗   ███╗███████╗███╗   ██╗██╗   ██╗
+████╗ ████║██╔════╝████╗  ██║██║   ██║
+██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
+██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
+██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
+╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ 
+'''
 def menu():
     while True:
         opc = ""
@@ -167,127 +108,98 @@ def menu():
             if opc != 1 or opc != 2 or opc != 3 or err:
                 print('Por favor digite apenas os numeros apresentados no menu.\n')
 
+'''
+███████╗███╗   ██╗████████╗██████╗  █████╗ ██████╗ 
+██╔════╝████╗  ██║╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗
+█████╗  ██╔██╗ ██║   ██║   ██████╔╝███████║██████╔╝
+██╔══╝  ██║╚██╗██║   ██║   ██╔══██╗██╔══██║██╔══██╗
+███████╗██║ ╚████║   ██║   ██║  ██║██║  ██║██║  ██║
+╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
+'''
+def entrar():
+    global usuario
+    account_ok = 0
+    password_ok = 0
+    print('ENTRAR:\n')
+    usuario = input('Digite seu usuário: ')
+    senha = input('Digite sua senha: ')
 
-def introducao():
-    print('''
-Olá, jogador! Seja bem-vindo ao Delta AVA Game! Vamos iniciar sua jornada...
-Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureiro, digite 2 para criar sua conta ou digite 3 para sair.
-       ''')
-    menu()
-
-
-def read_accounts():
-    global user_account
-    with open('accounts.json', encoding='utf-8') as acc:
-        accounts = json.load(acc)
+    check_accounts()
 
     for account in accounts:
         if usuario.lower() == account['username'].lower():
-            user_account = account
-            break
-
-    return user_account
-
-
-def read_enemies():
-    with open('enemies.json', encoding='utf-8') as en:
-        enemies = json.load(en)
-
-    return enemies
-
-
-def search_battle():
-    global enemy
-    enemy = choice(read_enemies())
-
-    print(f'Você acabou de encontrar {enemy["pre2"]} {enemy["name"]}!')
-    print(f'=========================================')
-
-    fight = input('Deseja continuar com esta batalha? (S para sim ou N para não): ')
-    try:
-        print('')
-        if fight.upper() == 'S':
-            # battle()
-            print('ESTAMOS EM CONSTRUÇÃO...')
-            game()
-        elif fight.upper() == 'N':
-            game()
-    
-    except ValueError as err: 
-        if fight.upper() != 'N' or fight.upper() != 'S' or err:
-            print('Por favor digite apenas as letras apresentadas no menu.\n')
-
-
-def battle():
-    turn = ['enemy', 'player']
-    if turn[randrange(len(turn))] == 'player':
-        while True:
-            read_accounts()
-            player_health = user_account['health']
-            player_exp = user_account['exp']
-            player_atkMin = user_account['atkMin']
-            player_atkMax = user_account['atkMax']
-            player_dmg = randint(player_atkMin, player_atkMax)
-            enemy_new_health = int(enemy["health"]) - player_dmg
-            if enemy_new_health <= 0:
-                enemy_new_health = 0
-                print(f'Seu dano {enemy["pre"]} {enemy["name"]} foi {player_dmg} e você o matou.')
+            account_ok = 1
+            if int(senha) == int(account['password']):
+                print(f'\nVOCÊ ENTROU COM O USUÁRIO: {account["username"]}!\n')
+                password_ok = 1
                 break
+
+    if account_ok == 0:
+        print('\nNão encontramos nenhuma conta com esse registro.\n')
+        menu()
+    else:
+        if password_ok == 0:
+            print('\nVocê digitou uma senha errada.\n')
+            menu()
+        else:
+            game()
+
+'''
+██████╗ ███████╗ ██████╗ ██╗███████╗████████╗██████╗  ██████╗ 
+██╔══██╗██╔════╝██╔════╝ ██║██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗
+██████╔╝█████╗  ██║  ███╗██║███████╗   ██║   ██████╔╝██║   ██║
+██╔══██╗██╔══╝  ██║   ██║██║╚════██║   ██║   ██╔══██╗██║   ██║
+██║  ██║███████╗╚██████╔╝██║███████║   ██║   ██║  ██║╚██████╔╝
+╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ 
+'''
+def registro():
+    while True:
+        print('REGISTRO:\n')
+        check = 0
+
+        check_accounts()
+
+        usuario = input('Digite seu usuário: ')
+        senha = input('Digite sua senha: ')
+
+        if usuario != '':
+            if senha != '':
+                for account in accounts:
+                    if usuario.lower() == account['username'].lower():
+                        print('\nATENÇÃO! Usuário já registrado. Tente outro nome.\n')
+                        check = 1
+
+                if check == 0:
+                    data_default['username'] = usuario
+                    data_default['password'] = senha
+                    accounts.append(data_default)
+
+                    with open(accounts_file, "w", encoding="utf-8") as acc:
+                        dump(accounts, acc, indent=4, separators=(",", ": ")) 
+
+                    print('\nRegistro realizado com sucesso!\n')
+                    check_accounts()
+                    menu()
+                    break
+                else:
+                    menu()
+                    break
             else:
-                print(f'Seu dano {enemy["pre"]} {enemy["name"]} foi {player_dmg} e deixou com {enemy_new_health} de vida.')
+                print('\nPor favor, digite uma senha válida.\n')
+        else:
+            print('\nPor favor, digite um usuário válido.\n')
 
-            player_new_health = player_health - int(enemy['atk'])
-            player_new_exp = player_exp + int(enemy["exp"])
-
-            print(f'O(a) {enemy["name"]} te deu um dano de {int(enemy["atk"])}.\n')
-            print(f'=========================================')
-            print(f'Sua vida era {player_health} e passou a ser {player_new_health}. Você ganhou {int(enemy["exp"])} de experiência.\n')
-
-            user_account['health'] = player_new_health
-            user_account['exp'] = player_new_exp
-
-
-            # BREAK PROVISÓRIO PARA INTERROMPER O LOOP INFINITO
-            break
-
-
-def status_player():
-    print('Status do seu personagem:')
-    print('=========================')
-
-    read_accounts()
-    for k, v in user_account.items():
-        print(f'{k}: {v}')
-
-    print('')
-
-
-# def update_data():
-#     for account in listdir('accounts'):
-#         if usuario == account.split(extension_data)[0]:
-#             chdir(join(getcwd(), 'accounts'))
-#             with open(usuario + extension_data, 'w') as arquivo:
-#                 arquivo.write(f'{user_account}')
-
-#             chdir('..')
-
-
+'''
+ ██████╗  █████╗ ███╗   ███╗███████╗
+██╔════╝ ██╔══██╗████╗ ████║██╔════╝
+██║  ███╗███████║██╔████╔██║█████╗  
+██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
+╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
+'''
 def game():
-    # cache = 0
     # Verificar se os dados estão ok.
-    # read_accounts()
-
-    # for k, v in data_default.items():
-    #     if k not in user_account.keys():
-    #         user_account[k] = v
-    #         print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
-    #         cache = 1
-
-    # if cache:
-    #     update_data()
-    #     print('Dados Default foram atualizados.\n')
-
-    status_player()
+    check_default()
 
     while True:
         print("""Você está no jogo, escolha o que deseja fazer:
@@ -304,12 +216,214 @@ def game():
             elif int(opc) == 2:
                 search_battle()
             elif int(opc) == 3:
-                print('Até a próxima!\n')
+                menu()
                 break
         
         except ValueError as err: 
             if opc != 1 or opc != 2 or opc != 3 or err:
                 print('Por favor digite apenas os numeros apresentados no menu.\n')
+
+'''
+███████╗████████╗ █████╗ ████████╗██╗   ██╗███████╗    ██████╗ ██╗      █████╗ ██╗   ██╗███████╗██████╗ 
+██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██║   ██║██╔════╝    ██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝██╔════╝██╔══██╗
+███████╗   ██║   ███████║   ██║   ██║   ██║███████╗    ██████╔╝██║     ███████║ ╚████╔╝ █████╗  ██████╔╝
+╚════██║   ██║   ██╔══██║   ██║   ██║   ██║╚════██║    ██╔═══╝ ██║     ██╔══██║  ╚██╔╝  ██╔══╝  ██╔══██╗
+███████║   ██║   ██║  ██║   ██║   ╚██████╔╝███████║    ██║     ███████╗██║  ██║   ██║   ███████╗██║  ██║
+╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚══════╝    ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+'''
+def status_player():
+    print('Status do seu personagem:')
+    print('=========================')
+
+    read_accounts()
+    for account in accounts:
+        if usuario.lower() == account['username'].lower():
+            for k, v in account.items():
+                print(f'{k}: {v}')
+            break
+
+    print('')
+
+'''
+███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗    ██████╗  █████╗ ████████╗████████╗██╗     ███████╗
+██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║    ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝
+███████╗█████╗  ███████║██████╔╝██║     ███████║    ██████╔╝███████║   ██║      ██║   ██║     █████╗  
+╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║    ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  
+███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║    ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗
+╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝
+'''
+def search_battle():
+    global enemy
+    enemy = choice(read_enemies())
+
+    print(f'Você acabou de encontrar {enemy["pre3"]} {enemy["name"]} com {enemy["health"]} de vida!')
+    print(f'=========================================\n')
+
+    fight = input('Deseja continuar com esta batalha? (S para sim ou N para não): ')
+    try:
+        print('')
+        if fight.upper() == 'S':
+            battle()
+        elif fight.upper() == 'N':
+            game()
+    
+    except ValueError as err: 
+        if fight.upper() != 'N' or fight.upper() != 'S' or err:
+            print('Por favor digite apenas as letras apresentadas no menu.\n')
+
+'''
+██████╗ ███████╗ █████╗ ██████╗     ███████╗███╗   ██╗███████╗███╗   ███╗██╗███████╗███████╗
+██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔════╝████╗  ██║██╔════╝████╗ ████║██║██╔════╝██╔════╝
+██████╔╝█████╗  ███████║██║  ██║    █████╗  ██╔██╗ ██║█████╗  ██╔████╔██║██║█████╗  ███████╗
+██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══╝  ██║╚██╗██║██╔══╝  ██║╚██╔╝██║██║██╔══╝  ╚════██║
+██║  ██║███████╗██║  ██║██████╔╝    ███████╗██║ ╚████║███████╗██║ ╚═╝ ██║██║███████╗███████║
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝╚═╝╚══════╝╚══════╝
+'''
+def read_enemies():
+    with open(enemies_file, encoding='utf-8') as en:
+        enemies = load(en)
+
+    return enemies
+
+'''
+██████╗  █████╗ ████████╗████████╗██╗     ███████╗
+██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝
+██████╔╝███████║   ██║      ██║   ██║     █████╗  
+██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  
+██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗
+╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝
+'''
+def battle():
+    enemy_dead = 0
+    # ADAPTAR SORTEIO PARA QUEM ATACA PRIMEIRO
+    # POR ENQUANTO O PLAYER ESTÁ COMEÇANDO O ATAQUE
+    # turn = ['enemy', 'player']
+    # if turn[randrange(len(turn))] == 'player':
+    read_accounts()
+    while int(enemy["health"]) > 0:
+        for account in accounts:
+            if usuario.lower() == account['username'].lower():
+                player_health = account['health']
+                player_exp = account['exp']
+                player_atkMin = account['atkMin']
+                player_atkMax = account['atkMax']
+                player_dmg = randint(int(player_atkMin), int(player_atkMax))
+                enemy_new_health = int(enemy["health"]) - int(player_dmg)
+                print(f'============================================================')
+                if enemy_new_health <= 0:
+                    enemy_new_health = 0
+                    print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou.')
+                    print(f'Você ganhou {int(enemy["exp"])} de experiência.')
+                    enemy_dead = 1
+                else:
+                    print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e {enemy["pre2"]} deixou com {enemy_new_health} de vida.')
+
+                player_new_health = int(player_health) - int(enemy['atk'])
+                player_new_exp = int(player_exp) + int(enemy["exp"])
+
+                if enemy_dead == 0:
+                    print(f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {int(enemy["atk"])}. Sua vida era {player_health} e passou a ser {player_new_health}.')
+                print(f'============================================================\n')
+
+                account['health'] = player_new_health
+                account['exp'] = player_new_exp
+                enemy["health"] = enemy_new_health
+                
+                update_data()
+                read_accounts()
+
+                with open(accounts_file, "w", encoding="utf-8") as acc:
+                    dump(accounts, acc, indent=4, separators=(",", ": ")) 
+
+        if enemy_dead:
+            game()
+            break
+
+'''
+ ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗     █████╗  ██████╗ ██████╗
+██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝    ██╔══██╗██╔════╝██╔════╝
+██║     ███████║█████╗  ██║     █████╔╝     ███████║██║     ██║     
+██║     ██╔══██║██╔══╝  ██║     ██╔═██╗     ██╔══██║██║     ██║     
+╚██████╗██║  ██║███████╗╚██████╗██║  ██╗    ██║  ██║╚██████╗╚██████╗
+ ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
+'''
+def check_accounts():
+    while True:
+        try:
+            if stat(accounts_file).st_size == 0:
+                with open(accounts_file, 'w') as arq:
+                    arq.write('[]')
+            else:
+                read_accounts()
+
+                # Apenas para ajudar no desenvolvimento.
+                print('')
+                print('=======================================')
+                account_list = []
+                for account in read_accounts():
+                    account_list.append(account['username'])
+                print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
+                print('=======================================')
+                # Apenas para ajudar no desenvolvimento.
+
+                break
+
+        except FileNotFoundError as err:
+            print(f'Error: {err}')
+            with open(accounts_file, 'w') as arq:
+                arq.write('[]')
+                print(f'File {accounts_file} created!')
+
+'''
+██████╗ ███████╗ █████╗ ██████╗      █████╗  ██████╗ ██████╗
+██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔══██╗██╔════╝██╔════╝
+██████╔╝█████╗  ███████║██║  ██║    ███████║██║     ██║     
+██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══██║██║     ██║     
+██║  ██║███████╗██║  ██║██████╔╝    ██║  ██║╚██████╗╚██████╗
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
+'''
+def read_accounts():
+    global accounts
+    with open(accounts_file, encoding='utf-8') as acc:
+        accounts = load(acc)
+
+    return accounts
+
+'''
+██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗    ██████╗  █████╗ ████████╗ █████╗ 
+██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝    ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
+██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗      ██║  ██║███████║   ██║   ███████║
+██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝      ██║  ██║██╔══██║   ██║   ██╔══██║
+╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗    ██████╔╝██║  ██║   ██║   ██║  ██║
+ ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+'''
+def update_data():
+    with open(accounts_file, "w", encoding="utf-8") as acc:
+        dump(accounts, acc, indent=4, separators=(",", ": "))
+
+'''
+ ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗    ██████╗ ███████╗███████╗ █████╗ ██╗   ██╗██╗  ████████╗
+██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝    ██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║██║  ╚══██╔══╝
+██║     ███████║█████╗  ██║     █████╔╝     ██║  ██║█████╗  █████╗  ███████║██║   ██║██║     ██║   
+██║     ██╔══██║██╔══╝  ██║     ██╔═██╗     ██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║   ██║██║     ██║   
+╚██████╗██║  ██║███████╗╚██████╗██║  ██╗    ██████╔╝███████╗██║     ██║  ██║╚██████╔╝███████╗██║   
+ ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝    ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   
+'''
+def check_default():
+    cache = 0
+    read_accounts()
+
+    for k, v in data_default.items():
+        for account in accounts:
+            if usuario.lower() == account['username'].lower():
+                if k not in account.keys():
+                    account[k] = v
+                    print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
+                    cache = 1
+
+    if cache:
+        update_data()
+        print('Dados Default foram atualizados.\n')
 
 
 introducao()
