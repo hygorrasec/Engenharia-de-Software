@@ -5,6 +5,7 @@
         "pre2": "o",
         "pre3": "um",
         "health": 100,
+        "healthMax": 100,
         "exp": 1000,
         "atk": 20
     },
@@ -14,6 +15,7 @@
         "pre2": "a",
         "pre3": "uma",
         "health": 50,
+        "healthMax": 50,
         "exp": 500,
         "atk": 10
     },
@@ -23,6 +25,7 @@
         "pre2": "o",
         "pre3": "um",
         "health": 60,
+        "healthMax": 60,
         "exp": 600,
         "atk": 12
     }

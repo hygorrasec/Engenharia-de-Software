@@ -1,4 +1,5 @@
-"""
+'''
+
 Curso: Engenharia de Software
 Período: 1o
 Disciplina: Pensamento Computacional
@@ -38,7 +39,7 @@ INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
 # print(arquivos[0].stat())  # Estatísticas do arquivo.
 # scanner.close()  # Precisa fechar o scandir
 
-"""
+'''
 
 from random import choice, randrange, randint
 from json import dump, load
@@ -51,6 +52,7 @@ data_default = {
                     'password': '',
                     'level': 1,
                     'health': 100,
+                    'healthMax': 100,
                     'exp': 0,
                     'first': 1,
                     'atkMin': 10,
@@ -59,14 +61,14 @@ data_default = {
                 }
 
 
-"""
+'''
 ██╗███╗   ██╗████████╗██████╗  ██████╗ ██████╗ ██╗   ██╗ ██████╗ █████╗  ██████╗ 
 ██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██╔══██╗██║   ██║██╔════╝██╔══██╗██╔═══██╗
 ██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║  ██║██║   ██║██║     ███████║██║   ██║
 ██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║  ██║██║   ██║██║     ██╔══██║██║   ██║
 ██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝██████╔╝╚██████╔╝╚██████╗██║  ██║╚██████╔╝
 ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝ ╚═════╝                                                                                
-"""
+'''
 def introducao():
     print('''
 Olá, jogador! Seja bem-vindo ao Delta AVA Game! Vamos iniciar sua jornada...
@@ -84,16 +86,15 @@ Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureir
 '''
 def menu():
     while True:
-        opc = ""
-        print("""Digite um número de acordo com o que deseja fazer:
+        opc = ''
+        print('''\nDigite um número de acordo com o que deseja fazer:
 
     1 - Entrar
     2 - Criar uma nova conta
     3 - Sair
-        """)
+        ''')
         opc = input('Escolha uma das opções: ')
         try:
-            print('')
             if int(opc) == 1:
                 entrar()
                 break
@@ -101,12 +102,18 @@ def menu():
                 registro()
                 break
             elif int(opc) == 3:
-                print('Até a próxima!\n')
+                print(f'\nAté a próxima!\n')
                 break
+            else:
+                error_menu()
         
         except ValueError as err: 
-            if opc != 1 or opc != 2 or opc != 3 or err:
-                print('Por favor digite apenas os numeros apresentados no menu.\n')
+            error_menu()
+
+def error_menu():
+    print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+    print('| !POR FAVOR, DIGITE A OPÇÃO CORRETA! |')
+    print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
 
 '''
 ███████╗███╗   ██╗████████╗██████╗  █████╗ ██████╗ 
@@ -120,26 +127,30 @@ def entrar():
     global usuario
     account_ok = 0
     password_ok = 0
-    print('ENTRAR:\n')
-    usuario = input('Digite seu usuário: ')
-    senha = input('Digite sua senha: ')
-
     check_accounts()
+    print('\n====================================')
+    print('|          ENTRAR NO JOGO          |')
+    print('====================================')
+    usuario = input('\nDigite seu usuário: ')
+    senha = input('Digite sua senha: ')
 
     for account in accounts:
         if usuario.lower() == account['username'].lower():
             account_ok = 1
-            if int(senha) == int(account['password']):
-                print(f'\nVOCÊ ENTROU COM O USUÁRIO: {account["username"]}!\n')
+            if senha == account['password']:
                 password_ok = 1
                 break
 
     if account_ok == 0:
-        print('\nNão encontramos nenhuma conta com esse registro.\n')
+        print('\n===================================================')
+        print('| NÃO ENCONTRAMOS NENHUMA CONTA COM ESSE REGISTRO |')
+        print('===================================================')
         menu()
     else:
         if password_ok == 0:
-            print('\nVocê digitou uma senha errada.\n')
+            print('\n=================================')
+            print('| VOCÊ DIGITOU UMA SENHA ERRADA |')
+            print('=================================')
             menu()
         else:
             game()
@@ -154,12 +165,14 @@ def entrar():
 '''
 def registro():
     while True:
-        print('REGISTRO:\n')
+        print('\n====================================')
+        print('|             REGISTRO             |')
+        print('====================================')
         check = 0
 
         check_accounts()
 
-        usuario = input('Digite seu usuário: ')
+        usuario = input('\nDigite seu usuário: ')
         senha = input('Digite sua senha: ')
 
         if usuario != '':
@@ -174,10 +187,9 @@ def registro():
                     data_default['password'] = senha
                     accounts.append(data_default)
 
-                    with open(accounts_file, "w", encoding="utf-8") as acc:
-                        dump(accounts, acc, indent=4, separators=(",", ": ")) 
+                    update_data()
 
-                    print('\nRegistro realizado com sucesso!\n')
+                    print('\nRegistro realizado com sucesso!')
                     check_accounts()
                     menu()
                     break
@@ -185,9 +197,17 @@ def registro():
                     menu()
                     break
             else:
-                print('\nPor favor, digite uma senha válida.\n')
+                print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+                print('| POR FAVOR, DIGITE UMA SENHA VÁLIDA! |')
+                print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+                menu()
+                break
         else:
-            print('\nPor favor, digite um usuário válido.\n')
+            print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+            print('| !POR FAVOR, DIGITE UM USUÁRIO VÁLIDO! |')
+            print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+            menu()
+            break
 
 '''
  ██████╗  █████╗ ███╗   ███╗███████╗
@@ -202,26 +222,31 @@ def game():
     check_default()
 
     while True:
-        print("""Você está no jogo, escolha o que deseja fazer:
-
+        opc = ''
+        mult_equal = len(usuario)*'='
+        print(f'\n======================================{mult_equal}')
+        print(f'|  OLÁ {usuario.upper()}, ESCOLHA O QUE DESEJA FAZER  |')
+        print(f'======================================{mult_equal}')
+        print('''
     1 - Status
     2 - Procurar batalha
     3 - Sair
-        """)
+        ''')
         opc = input('Escolha uma das opções: ')
         try:
-            print('')
             if int(opc) == 1:
                 status_player()
             elif int(opc) == 2:
                 search_battle()
+                break
             elif int(opc) == 3:
                 menu()
                 break
+            else:
+                error_menu()
         
         except ValueError as err: 
-            if opc != 1 or opc != 2 or opc != 3 or err:
-                print('Por favor digite apenas os numeros apresentados no menu.\n')
+            error_menu()
 
 '''
 ███████╗████████╗ █████╗ ████████╗██╗   ██╗███████╗    ██████╗ ██╗      █████╗ ██╗   ██╗███████╗██████╗ 
@@ -232,8 +257,9 @@ def game():
 ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚══════╝    ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
 '''
 def status_player():
-    print('Status do seu personagem:')
-    print('=========================')
+    print('\n===================================')
+    print('|    STATUS DO SEU PERSONAGEM!    |')
+    print('===================================\n')
 
     read_accounts()
     for account in accounts:
@@ -241,8 +267,6 @@ def status_player():
             for k, v in account.items():
                 print(f'{k}: {v}')
             break
-
-    print('')
 
 '''
 ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗    ██████╗  █████╗ ████████╗████████╗██╗     ███████╗
@@ -256,20 +280,25 @@ def search_battle():
     global enemy
     enemy = choice(read_enemies())
 
-    print(f'Você acabou de encontrar {enemy["pre3"]} {enemy["name"]} com {enemy["health"]} de vida!')
-    print(f'=========================================\n')
+    mult_equal = (len(enemy['pre3'])+len(enemy['name'])+len(str(enemy['health'])))*'='
+    print(f'\n===================================={mult_equal}')
+    print(f'|  VOCÊ ENCONTROU {enemy["pre3"].upper()} {enemy["name"].upper()} COM {enemy["health"]} DE VIDA!  |')
+    print(f'===================================={mult_equal}')
 
-    fight = input('Deseja continuar com esta batalha? (S para sim ou N para não): ')
-    try:
-        print('')
-        if fight.upper() == 'S':
-            battle()
-        elif fight.upper() == 'N':
-            game()
-    
-    except ValueError as err: 
-        if fight.upper() != 'N' or fight.upper() != 'S' or err:
-            print('Por favor digite apenas as letras apresentadas no menu.\n')
+    while True:
+        fight = input('\nDeseja continuar com esta batalha? (S para sim ou N para não): ')
+        try:
+            if fight.upper() == 'S':
+                battle()
+                break
+            elif fight.upper() == 'N':
+                game()
+                break
+            else:
+                error_menu()
+
+        except ValueError as err: 
+            error_menu()
 
 '''
 ██████╗ ███████╗ █████╗ ██████╗     ███████╗███╗   ██╗███████╗███╗   ███╗██╗███████╗███████╗
@@ -300,40 +329,39 @@ def battle():
     # turn = ['enemy', 'player']
     # if turn[randrange(len(turn))] == 'player':
     read_accounts()
-    while int(enemy["health"]) > 0:
+    while int(enemy['health']) > 0:
         for account in accounts:
             if usuario.lower() == account['username'].lower():
-                player_health = account['health']
-                player_exp = account['exp']
-                player_atkMin = account['atkMin']
-                player_atkMax = account['atkMax']
-                player_dmg = randint(int(player_atkMin), int(player_atkMax))
-                enemy_new_health = int(enemy["health"]) - int(player_dmg)
-                print(f'============================================================')
+                player_health = int(account['health'])
+                player_healthMax = int(account['healthMax'])
+                player_exp = int(account['exp'])
+                player_atkMin = int(account['atkMin'])
+                player_atkMax = int(account['atkMax'])
+                player_dmg = randint(player_atkMin, player_atkMax)
+                enemy_health = int(enemy['health'])
+                enemy_new_health = enemy_health - player_dmg
+                enemy_exp = int(enemy['exp'])
+                enemy_atk = int(enemy['atk'])
+                print(f'\n============================================================')
                 if enemy_new_health <= 0:
                     enemy_new_health = 0
-                    print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou.')
-                    print(f'Você ganhou {int(enemy["exp"])} de experiência.')
+                    print(f'Seu último dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou!')
+                    print(f'VOCÊ GANHOU {enemy_exp} DE EXPERIÊNCIA E SUA VIDA FOI RESTAURADA.')
+                    account['health'] = player_healthMax
+                    account['exp'] = player_exp + enemy_exp
                     enemy_dead = 1
                 else:
                     print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e {enemy["pre2"]} deixou com {enemy_new_health} de vida.')
-
-                player_new_health = int(player_health) - int(enemy['atk'])
-                player_new_exp = int(player_exp) + int(enemy["exp"])
+                    enemy['health'] = enemy_new_health
 
                 if enemy_dead == 0:
-                    print(f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {int(enemy["atk"])}. Sua vida era {player_health} e passou a ser {player_new_health}.')
-                print(f'============================================================\n')
-
-                account['health'] = player_new_health
-                account['exp'] = player_new_exp
-                enemy["health"] = enemy_new_health
+                    player_new_health = player_health - enemy_atk
+                    account['health'] = player_new_health
+                    print(f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {enemy_atk}. Sua vida era {player_health} e passou a ser {player_new_health}.')
+                print(f'============================================================')
                 
                 update_data()
                 read_accounts()
-
-                with open(accounts_file, "w", encoding="utf-8") as acc:
-                    dump(accounts, acc, indent=4, separators=(",", ": ")) 
 
         if enemy_dead:
             game()
@@ -357,13 +385,12 @@ def check_accounts():
                 read_accounts()
 
                 # Apenas para ajudar no desenvolvimento.
-                print('')
-                print('=======================================')
+                print('\n========INFORMAÇÃO PROVISÓRIA========')
                 account_list = []
                 for account in read_accounts():
                     account_list.append(account['username'])
                 print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
-                print('=======================================')
+                print('=====================================')
                 # Apenas para ajudar no desenvolvimento.
 
                 break
@@ -398,8 +425,8 @@ def read_accounts():
  ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
 '''
 def update_data():
-    with open(accounts_file, "w", encoding="utf-8") as acc:
-        dump(accounts, acc, indent=4, separators=(",", ": "))
+    with open(accounts_file, 'w', encoding='utf-8') as acc:
+        dump(accounts, acc, indent=4, separators=(',', ': '))
 
 '''
  ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗    ██████╗ ███████╗███████╗ █████╗ ██╗   ██╗██╗  ████████╗
