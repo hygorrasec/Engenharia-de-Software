@@ -5,10 +5,22 @@
         "level": 1,
         "health": 100,
         "healthMax": 100,
-        "exp": 2800,
-        "first": 1,
+        "exp": 1500,
+        "firstLogin": 1,
         "atkMin": 10,
         "atkMax": 20,
-        "healthPotion": 1000
+        "healthPotion": 1000,
+        "backpack": {},
+        "depot": {},
+        "equips": {
+            "helmet": "Leather Helmet",
+            "armor": "Jacket",
+            "legs": "Leather Legs",
+            "boots": "Leather Boots",
+            "amulet": "",
+            "ring": "",
+            "shield": "Wooden Shield",
+            "weapon": "Axe"
+        }
     }
 ]

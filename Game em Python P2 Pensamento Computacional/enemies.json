@@ -7,7 +7,8 @@
         "health": 100,
         "healthMax": 100,
         "exp": 1000,
-        "atk": 20
+        "atk": 20,
+        "loot": ["Dragon Shield", "Gold Coin"]
     },
     {
         "name": "Cobra",
@@ -17,7 +18,8 @@
         "health": 50,
         "healthMax": 50,
         "exp": 500,
-        "atk": 10
+        "atk": 10,
+        "loot": ["Snake Tail", "Gold Coin"]
     },
     {
         "name": "Morcego",
@@ -27,6 +29,7 @@
         "health": 60,
         "healthMax": 60,
         "exp": 600,
-        "atk": 12
+        "atk": 12,
+        "loot": ["Bat Wing", "Gold Coin"]
     }
 ]

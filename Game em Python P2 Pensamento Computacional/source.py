@@ -47,19 +47,41 @@ from os import stat
 
 accounts_file = 'accounts.json'
 enemies_file = 'enemies.json'
-data_default = {
-                    'username': '',
-                    'password': '',
-                    'level': 1,
-                    'health': 100,
-                    'healthMax': 100,
-                    'exp': 0,
-                    'first': 1,
-                    'atkMin': 10,
-                    'atkMax': 20,
-                    'healthPotion': 1000
+data_default_player = {
+                    "username": "",
+                    "password": "",
+                    "level": 1,
+                    "health": 100,
+                    "healthMax": 100,
+                    "exp": 0,
+                    "firstLogin": 1,
+                    "atkMin": 10,
+                    "atkMax": 20,
+                    "healthPotion": 1000,
+                    "backpack": {},
+                    "depot": {},
+                    "equips": {
+                            "helmet": "Leather Helmet",
+                            "armor": "Jacket",
+                            "legs": "Leather Legs",
+                            "boots": "Leather Boots",
+                            "amulet": "",
+                            "ring": "",
+                            "shield": "Wooden Shield",
+                            "weapon": "Axe"
+                    },
                 }
-
+data_default_enemy = {
+                        "name": "Bug",
+                        "pre1": "no",
+                        "pre2": "o",
+                        "pre3": "um",
+                        "health": 20,
+                        "healthMax": 20,
+                        "exp": 100,
+                        "atk": 5,
+                        "loot": ["Gold Coin"]
+                    }
 
 '''
 ██╗███╗   ██╗████████╗██████╗  ██████╗ ██████╗ ██╗   ██╗ ██████╗ █████╗  ██████╗ 
@@ -183,9 +205,9 @@ def registro():
                         check = 1
 
                 if check == 0:
-                    data_default['username'] = usuario
-                    data_default['password'] = senha
-                    accounts.append(data_default)
+                    data_default_player['username'] = usuario
+                    data_default_player['password'] = senha
+                    accounts.append(data_default_player)
 
                     update_data()
 
@@ -309,6 +331,27 @@ def search_battle():
 ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝╚═╝╚══════╝╚══════╝
 '''
 def read_enemies():
+    global enemies
+    while True:
+        try:
+            if stat(enemies_file).st_size == 0:
+                enemies_list = []
+                enemies_list.append(data_default_enemy)
+                with open(enemies_file, 'w', encoding='utf-8') as enemies_l:
+                    dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
+                break
+            else:
+                break
+
+        except FileNotFoundError as err:
+            print(f'Error: {err}')
+            enemies_list = []
+            enemies_list.append(data_default_enemy)
+            with open(enemies_file, 'w', encoding='utf-8') as enemies_l:
+                dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
+            print(f'File {enemies_file} created!')
+            break
+
     with open(enemies_file, encoding='utf-8') as en:
         enemies = load(en)
 
@@ -440,7 +483,7 @@ def check_default():
     cache = 0
     read_accounts()
 
-    for k, v in data_default.items():
+    for k, v in data_default_player.items():
         for account in accounts:
             if usuario.lower() == account['username'].lower():
                 if k not in account.keys():
