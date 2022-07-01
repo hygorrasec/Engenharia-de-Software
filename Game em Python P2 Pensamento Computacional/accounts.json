@@ -5,7 +5,7 @@
         "level": 1,
         "health": 100,
         "healthMax": 100,
-        "exp": 1500,
+        "exp": 0,
         "firstLogin": 1,
         "atkMin": 10,
         "atkMax": 20,

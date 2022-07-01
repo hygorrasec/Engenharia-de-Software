@@ -5,39 +5,7 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 2.0
-
-====================================================
-
-INFORMAÇÕES IMPORTANTES PARA FINS DE ESTUDO:
-# from os import listdir, chdir, getcwd
-# from os.path import join
-
-# listdir() -> Listando arquivos e diretórios
-# chdir() -> Muda o diretório.
-# getcwd() -> Retorna o caminho absoludo.
-# join() -> Recebe dois parâmetros, sendo o primeiro diretório atual e o segundo o diretório que será juntado ao atual.
-# eval() -> Converte string em formato de lista para uma lista real.
-
-# LISTAR APENAS ARQUIVOS
-# from os import listdir
-# from os.path import isfile, join
-# onlyfiles = [f for f in listdir(getcwd()) if isfile(join(getcwd(), f))]
-# print(onlyfiles)
-
-# dicionario = {}
-# dicionario['chave'] = 'valor' -> Adiciona ou atualiza um dado no dicionário.
-
-# scanner = os.scandir('accounts')  # Listando arquivos e diretórios com mais detalhes
-# arquivos = list(scanner)
-# print(arquivos[0].inode())  # Identificador do elemento na árvore do diretório.
-# print(arquivos[0].is_dir())  # É um diretório?
-# print(arquivos[0].is_file())  # É um arquivo?
-# print(arquivos[0].is_symlink())  # É um link simbólico?
-# print(arquivos[0].name)  # Nome do arquivo.
-# print(arquivos[0].path)  # Caminho até o arquivo.
-# print(arquivos[0].stat())  # Estatísticas do arquivo.
-# scanner.close()  # Precisa fechar o scandir
+Versão: 2.1
 
 '''
 
@@ -61,15 +29,15 @@ data_default_player = {
                     "backpack": {},
                     "depot": {},
                     "equips": {
-                            "helmet": "Leather Helmet",
-                            "armor": "Jacket",
-                            "legs": "Leather Legs",
-                            "boots": "Leather Boots",
-                            "amulet": "",
-                            "ring": "",
-                            "shield": "Wooden Shield",
-                            "weapon": "Axe"
-                    },
+                        "helmet": "Leather Helmet",
+                        "armor": "Jacket",
+                        "legs": "Leather Legs",
+                        "boots": "Leather Boots",
+                        "amulet": "",
+                        "ring": "",
+                        "shield": "Wooden Shield",
+                        "weapon": "Axe"
+                    }
                 }
 data_default_enemy = {
                         "name": "Bug",
@@ -80,7 +48,10 @@ data_default_enemy = {
                         "healthMax": 20,
                         "exp": 100,
                         "atk": 5,
-                        "loot": ["Gold Coin"]
+                        "loot": {
+                            "Gold Coin": 10,
+                            "Cherry": 2
+                        }
                     }
 
 '''
@@ -89,13 +60,44 @@ data_default_enemy = {
 ██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║  ██║██║   ██║██║     ███████║██║   ██║
 ██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║  ██║██║   ██║██║     ██╔══██║██║   ██║
 ██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝██████╔╝╚██████╔╝╚██████╗██║  ██║╚██████╔╝
-╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝ ╚═════╝                                                                                
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝ ╚═════╝ 
 '''
 def introducao():
-    print('''
-Olá, jogador! Seja bem-vindo ao Delta AVA Game! Vamos iniciar sua jornada...
-Se você já tem uma jornada, digite 1 para entrar. Caso seja um novo aventureiro, digite 2 para criar sua conta ou digite 3 para sair.
-       ''')
+    # Verifica se a lista de usuários está ok.
+    while True:
+        try:
+            if stat(accounts_file).st_size == 0:
+                with open(accounts_file, 'w') as arq:
+                    arq.write('[]')
+                    break
+            else:
+                break
+
+        except FileNotFoundError as err:
+            with open(accounts_file, 'w') as arq:
+                arq.write('[]')
+                break
+
+    # Verifica se a lista de inimigos está ok.
+    while True:
+        try:
+            if stat(enemies_file).st_size == 0:
+                enemies_list = []
+                enemies_list.append(data_default_enemy)
+                with open(enemies_file, 'w', encoding='utf-8') as enemies_l:
+                    dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
+                break
+            else:
+                break
+
+        except FileNotFoundError as err:
+            enemies_list = []
+            enemies_list.append(data_default_enemy)
+            with open(enemies_file, 'w', encoding='utf-8') as enemies_l:
+                dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
+            break
+
+    print('\nOlá, jogador(a)! Seja bem-vindo(a) ao Delta AVA Game! Vamos iniciar sua jornada...\nSe você já tem uma jornada, digite 1 para entrar. Caso seja um(a) novo(a) aventureiro(a), digite 2 para criar sua conta ou 3 para sair.')
     menu()
 
 '''
@@ -124,7 +126,9 @@ def menu():
                 registro()
                 break
             elif int(opc) == 3:
-                print(f'\nAté a próxima!\n')
+                print('\n====================================')
+                print('|          ATÉ A PRÓXIMA!          |')
+                print('====================================\n')
                 break
             else:
                 error_menu()
@@ -132,10 +136,18 @@ def menu():
         except ValueError as err: 
             error_menu()
 
+'''
+███████╗██████╗ ██████╗  ██████╗ ██████╗     ███╗   ███╗███████╗███╗   ██╗██╗   ██╗
+██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗    ████╗ ████║██╔════╝████╗  ██║██║   ██║
+█████╗  ██████╔╝██████╔╝██║   ██║██████╔╝    ██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
+██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗    ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
+███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║    ██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
+╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝    ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ 
+'''
 def error_menu():
-    print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
-    print('| !POR FAVOR, DIGITE A OPÇÃO CORRETA! |')
-    print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+    print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+    print('| POR FAVOR, DIGITE A OPÇÃO CORRETA |')
+    print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
 
 '''
 ███████╗███╗   ██╗████████╗██████╗  █████╗ ██████╗ 
@@ -211,7 +223,10 @@ def registro():
 
                     update_data()
 
-                    print('\nRegistro realizado com sucesso!')
+                    print('\n===================================')
+                    print('| REGISTRO REALIZADO COM SUCESSO! |')
+                    print('===================================')
+
                     check_accounts()
                     menu()
                     break
@@ -323,41 +338,6 @@ def search_battle():
             error_menu()
 
 '''
-██████╗ ███████╗ █████╗ ██████╗     ███████╗███╗   ██╗███████╗███╗   ███╗██╗███████╗███████╗
-██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔════╝████╗  ██║██╔════╝████╗ ████║██║██╔════╝██╔════╝
-██████╔╝█████╗  ███████║██║  ██║    █████╗  ██╔██╗ ██║█████╗  ██╔████╔██║██║█████╗  ███████╗
-██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══╝  ██║╚██╗██║██╔══╝  ██║╚██╔╝██║██║██╔══╝  ╚════██║
-██║  ██║███████╗██║  ██║██████╔╝    ███████╗██║ ╚████║███████╗██║ ╚═╝ ██║██║███████╗███████║
-╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝╚═╝╚══════╝╚══════╝
-'''
-def read_enemies():
-    global enemies
-    while True:
-        try:
-            if stat(enemies_file).st_size == 0:
-                enemies_list = []
-                enemies_list.append(data_default_enemy)
-                with open(enemies_file, 'w', encoding='utf-8') as enemies_l:
-                    dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
-                break
-            else:
-                break
-
-        except FileNotFoundError as err:
-            print(f'Error: {err}')
-            enemies_list = []
-            enemies_list.append(data_default_enemy)
-            with open(enemies_file, 'w', encoding='utf-8') as enemies_l:
-                dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
-            print(f'File {enemies_file} created!')
-            break
-
-    with open(enemies_file, encoding='utf-8') as en:
-        enemies = load(en)
-
-    return enemies
-
-'''
 ██████╗  █████╗ ████████╗████████╗██╗     ███████╗
 ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝
 ██████╔╝███████║   ██║      ██║   ██║     █████╗  
@@ -419,30 +399,16 @@ def battle():
  ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
 '''
 def check_accounts():
-    while True:
-        try:
-            if stat(accounts_file).st_size == 0:
-                with open(accounts_file, 'w') as arq:
-                    arq.write('[]')
-            else:
-                read_accounts()
+    read_accounts()
 
-                # Apenas para ajudar no desenvolvimento.
-                print('\n========INFORMAÇÃO PROVISÓRIA========')
-                account_list = []
-                for account in read_accounts():
-                    account_list.append(account['username'])
-                print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
-                print('=====================================')
-                # Apenas para ajudar no desenvolvimento.
-
-                break
-
-        except FileNotFoundError as err:
-            print(f'Error: {err}')
-            with open(accounts_file, 'w') as arq:
-                arq.write('[]')
-                print(f'File {accounts_file} created!')
+    # Apenas para ajudar no desenvolvimento.
+    print('\n========INFORMAÇÃO PROVISÓRIA========')
+    account_list = []
+    for account in read_accounts():
+        account_list.append(account['username'])
+    print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
+    print('=====================================')
+    # Apenas para ajudar no desenvolvimento.
 
 '''
 ██████╗ ███████╗ █████╗ ██████╗      █████╗  ██████╗ ██████╗
@@ -458,6 +424,21 @@ def read_accounts():
         accounts = load(acc)
 
     return accounts
+
+'''
+██████╗ ███████╗ █████╗ ██████╗     ███████╗███╗   ██╗███████╗███╗   ███╗██╗███████╗███████╗
+██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔════╝████╗  ██║██╔════╝████╗ ████║██║██╔════╝██╔════╝
+██████╔╝█████╗  ███████║██║  ██║    █████╗  ██╔██╗ ██║█████╗  ██╔████╔██║██║█████╗  ███████╗
+██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══╝  ██║╚██╗██║██╔══╝  ██║╚██╔╝██║██║██╔══╝  ╚════██║
+██║  ██║███████╗██║  ██║██████╔╝    ███████╗██║ ╚████║███████╗██║ ╚═╝ ██║██║███████╗███████║
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝╚═╝╚══════╝╚══════╝
+'''
+def read_enemies():
+    global enemies
+    with open(enemies_file, encoding='utf-8') as en:
+        enemies = load(en)
+
+    return enemies
 
 '''
 ██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗    ██████╗  █████╗ ████████╗ █████╗ 

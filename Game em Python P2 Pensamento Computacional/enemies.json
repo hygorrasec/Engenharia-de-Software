@@ -8,7 +8,10 @@
         "healthMax": 100,
         "exp": 1000,
         "atk": 20,
-        "loot": ["Dragon Shield", "Gold Coin"]
+        "loot": {
+            "Gold Coin": 200,
+            "Dragon Shield": 1
+        }
     },
     {
         "name": "Cobra",
@@ -19,7 +22,10 @@
         "healthMax": 50,
         "exp": 500,
         "atk": 10,
-        "loot": ["Snake Tail", "Gold Coin"]
+        "loot": {
+            "Snake Tail": 1,
+            "Gold Coin": 2
+        }
     },
     {
         "name": "Morcego",
@@ -30,6 +36,23 @@
         "healthMax": 60,
         "exp": 600,
         "atk": 12,
-        "loot": ["Bat Wing", "Gold Coin"]
+        "loot": {
+            "Bat Wing": 2,
+            "Gold Coin": 4
+        }
+    },
+    {
+        "name": "Bug",
+        "pre1": "no",
+        "pre2": "o",
+        "pre3": "um",
+        "health": 20,
+        "healthMax": 20,
+        "exp": 100,
+        "atk": 5,
+        "loot": {
+            "Gold Coin": 10,
+            "Cherry": 2
+        }
     }
 ]
