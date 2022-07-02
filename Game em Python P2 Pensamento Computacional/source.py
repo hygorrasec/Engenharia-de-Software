@@ -5,65 +5,65 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 2.1
+Versão: 2.2
 
 '''
 
-from random import choice, randrange, randint
-from json import dump, load
-from os import stat
 
+# ============|
+# BIBLIOTECAS |
+# ============|
+from random import choice, randrange, randint
+# choice = usado para randomizar o enemy que vai aparecer.
+# randrange = será usado para sortear quem vai começar atacando.
+# randint = usado para randomizar o dano de ataque.
+from json import dump, load
+# dump = usado para salvar o arquivo json.
+# load = usado para ler o arquivo json.
+from os import stat
+# stat = usado para verificar se o arquivo json está vazio.
+
+
+# ==========|
+# VARIÁVEIS |
+# ==========|
 accounts_file = 'accounts.json'
 enemies_file = 'enemies.json'
 data_default_player = {
-                    "username": "",
-                    "password": "",
-                    "level": 1,
-                    "health": 100,
-                    "healthMax": 100,
-                    "exp": 0,
-                    "firstLogin": 1,
-                    "atkMin": 10,
-                    "atkMax": 20,
-                    "healthPotion": 1000,
-                    "backpack": {},
-                    "depot": {},
-                    "equips": {
-                        "helmet": "Leather Helmet",
-                        "armor": "Jacket",
-                        "legs": "Leather Legs",
-                        "boots": "Leather Boots",
-                        "amulet": "",
-                        "ring": "",
-                        "shield": "Wooden Shield",
-                        "weapon": "Axe"
+                        "username": "",
+                        "password": "",
+                        "level": 1,
+                        "health": 150,
+                        "healthMax": 150,
+                        "exp": 0,
+                        "firstLogin": 1,
+                        "atkMelee": [5, 10],
+                        "healthPotion": 1000,
+                        "backpack": {}
                     }
-                }
 data_default_enemy = {
                         "name": "Bug",
                         "pre1": "no",
                         "pre2": "o",
                         "pre3": "um",
-                        "health": 20,
-                        "healthMax": 20,
-                        "exp": 100,
-                        "atk": 5,
+                        "health": 29,
+                        "healthMax": 29,
+                        "exp": 18,
+                        "atkMelee": [0, 23],
                         "loot": {
                             "Gold Coin": 10,
                             "Cherry": 2
                         }
                     }
 
-'''
-██╗███╗   ██╗████████╗██████╗  ██████╗ ██████╗ ██╗   ██╗ ██████╗ █████╗  ██████╗ 
-██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██╔══██╗██║   ██║██╔════╝██╔══██╗██╔═══██╗
-██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║  ██║██║   ██║██║     ███████║██║   ██║
-██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║  ██║██║   ██║██║     ██╔══██║██║   ██║
-██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝██████╔╝╚██████╔╝╚██████╗██║  ██║╚██████╔╝
-╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝ ╚═════╝ 
-'''
+
+# ===========|
+# INTRODUÇÃO |
+# ===========|
 def introducao():
-    # Verifica se a lista de usuários está ok.
+    # Aqui verifica se o arquivo json existe ou se está vazio.
+    # Se não existir ele criar e depois adiciona um conteúdo dentro dele.
+    # Se existir e não tiver conteúdo, ele adiciona algo.
     while True:
         try:
             if stat(accounts_file).st_size == 0:
@@ -78,7 +78,6 @@ def introducao():
                 arq.write('[]')
                 break
 
-    # Verifica se a lista de inimigos está ok.
     while True:
         try:
             if stat(enemies_file).st_size == 0:
@@ -100,22 +99,17 @@ def introducao():
     print('\nOlá, jogador(a)! Seja bem-vindo(a) ao Delta AVA Game! Vamos iniciar sua jornada...\nSe você já tem uma jornada, digite 1 para entrar. Caso seja um(a) novo(a) aventureiro(a), digite 2 para criar sua conta ou 3 para sair.')
     menu()
 
-'''
-███╗   ███╗███████╗███╗   ██╗██╗   ██╗
-████╗ ████║██╔════╝████╗  ██║██║   ██║
-██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
-██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
-██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
-╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ 
-'''
+
+# =====|
+# MENU |
+# =====|
 def menu():
     while True:
-        opc = ''
         print('''\nDigite um número de acordo com o que deseja fazer:
 
-    1 - Entrar
-    2 - Criar uma nova conta
-    3 - Sair
+    [ 1 ] - Entrar
+    [ 2 ] - Criar uma nova conta
+    [ 3 ] - Sair
         ''')
         opc = input('Escolha uma das opções: ')
         try:
@@ -126,45 +120,24 @@ def menu():
                 registro()
                 break
             elif int(opc) == 3:
-                print('\n====================================')
-                print('|          ATÉ A PRÓXIMA!          |')
-                print('====================================\n')
+                show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
                 break
             else:
-                error_menu()
+                show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
         
         except ValueError as err: 
-            error_menu()
+            show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
 
-'''
-███████╗██████╗ ██████╗  ██████╗ ██████╗     ███╗   ███╗███████╗███╗   ██╗██╗   ██╗
-██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗    ████╗ ████║██╔════╝████╗  ██║██║   ██║
-█████╗  ██████╔╝██████╔╝██║   ██║██████╔╝    ██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
-██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗    ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
-███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║    ██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
-╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝    ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ 
-'''
-def error_menu():
-    print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
-    print('| POR FAVOR, DIGITE A OPÇÃO CORRETA |')
-    print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
 
-'''
-███████╗███╗   ██╗████████╗██████╗  █████╗ ██████╗ 
-██╔════╝████╗  ██║╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗
-█████╗  ██╔██╗ ██║   ██║   ██████╔╝███████║██████╔╝
-██╔══╝  ██║╚██╗██║   ██║   ██╔══██╗██╔══██║██╔══██╗
-███████╗██║ ╚████║   ██║   ██║  ██║██║  ██║██║  ██║
-╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
-'''
+# =======|
+# ENTRAR |
+# =======|
 def entrar():
     global usuario
     account_ok = 0
     password_ok = 0
     check_accounts()
-    print('\n====================================')
-    print('|          ENTRAR NO JOGO          |')
-    print('====================================')
+    show_message('ENTRAR NO JOGO')
     usuario = input('\nDigite seu usuário: ')
     senha = input('Digite sua senha: ')
 
@@ -176,32 +149,22 @@ def entrar():
                 break
 
     if account_ok == 0:
-        print('\n===================================================')
-        print('| NÃO ENCONTRAMOS NENHUMA CONTA COM ESSE REGISTRO |')
-        print('===================================================')
+        show_message('NÃO ENCONTRAMOS NENHUMA CONTA COM ESSE REGISTRO')
         menu()
     else:
         if password_ok == 0:
-            print('\n=================================')
-            print('| VOCÊ DIGITOU UMA SENHA ERRADA |')
-            print('=================================')
+            show_message('VOCÊ DIGITOU UMA SENHA ERRADA')
             menu()
         else:
             game()
 
-'''
-██████╗ ███████╗ ██████╗ ██╗███████╗████████╗██████╗  ██████╗ 
-██╔══██╗██╔════╝██╔════╝ ██║██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗
-██████╔╝█████╗  ██║  ███╗██║███████╗   ██║   ██████╔╝██║   ██║
-██╔══██╗██╔══╝  ██║   ██║██║╚════██║   ██║   ██╔══██╗██║   ██║
-██║  ██║███████╗╚██████╔╝██║███████║   ██║   ██║  ██║╚██████╔╝
-╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ 
-'''
+
+# =========|
+# REGISTRO |
+# =========|
 def registro():
     while True:
-        print('\n====================================')
-        print('|             REGISTRO             |')
-        print('====================================')
+        show_message('REGISTRO')
         check = 0
 
         check_accounts()
@@ -213,7 +176,7 @@ def registro():
             if senha != '':
                 for account in accounts:
                     if usuario.lower() == account['username'].lower():
-                        print('\nATENÇÃO! Usuário já registrado. Tente outro nome.\n')
+                        show_message('ATENÇÃO! Usuário já registrado. Tente outro nome.')
                         check = 1
 
                 if check == 0:
@@ -223,9 +186,7 @@ def registro():
 
                     update_data()
 
-                    print('\n===================================')
-                    print('| REGISTRO REALIZADO COM SUCESSO! |')
-                    print('===================================')
+                    show_message('REGISTRO REALIZADO COM SUCESSO!')
 
                     check_accounts()
                     menu()
@@ -234,36 +195,34 @@ def registro():
                     menu()
                     break
             else:
-                print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
-                print('| POR FAVOR, DIGITE UMA SENHA VÁLIDA! |')
-                print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+                show_message('POR FAVOR, DIGITE UMA SENHA VÁLIDA')
                 menu()
                 break
         else:
-            print('\n!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
-            print('| !POR FAVOR, DIGITE UM USUÁRIO VÁLIDO! |')
-            print('!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!')
+            show_message('POR FAVOR, DIGITE UM USUÁRIO VÁLIDO')
             menu()
             break
 
-'''
- ██████╗  █████╗ ███╗   ███╗███████╗
-██╔════╝ ██╔══██╗████╗ ████║██╔════╝
-██║  ███╗███████║██╔████╔██║█████╗  
-██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
-╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
- ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
-'''
+
+# =====|
+# GAME |
+# =====|
 def game():
     # Verificar se os dados estão ok.
     check_default()
+    read_accounts()
 
     while True:
-        opc = ''
-        mult_equal = len(usuario)*'='
-        print(f'\n======================================{mult_equal}')
-        print(f'|  OLÁ {usuario.upper()}, ESCOLHA O QUE DESEJA FAZER  |')
-        print(f'======================================{mult_equal}')
+        for account in accounts:
+            if usuario.lower() == account['username'].lower():
+                if int(account['firstLogin']) == 1:
+                    account['firstLogin'] = 0
+                    update_data()
+                    show_message(f'OLÁ {usuario.upper()}, SEJA MUITO BEM VINDO(A) AO JOGO!')
+                else:
+                    show_message(f'OLÁ {usuario.upper()}, É BOM TE VER POR AQUI NOVAMENTE!')
+                break
+
         print('''
     1 - Status
     2 - Procurar batalha
@@ -280,23 +239,18 @@ def game():
                 menu()
                 break
             else:
-                error_menu()
+                show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
         
         except ValueError as err: 
-            error_menu()
+            show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
 
-'''
-███████╗████████╗ █████╗ ████████╗██╗   ██╗███████╗    ██████╗ ██╗      █████╗ ██╗   ██╗███████╗██████╗ 
-██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██║   ██║██╔════╝    ██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝██╔════╝██╔══██╗
-███████╗   ██║   ███████║   ██║   ██║   ██║███████╗    ██████╔╝██║     ███████║ ╚████╔╝ █████╗  ██████╔╝
-╚════██║   ██║   ██╔══██║   ██║   ██║   ██║╚════██║    ██╔═══╝ ██║     ██╔══██║  ╚██╔╝  ██╔══╝  ██╔══██╗
-███████║   ██║   ██║  ██║   ██║   ╚██████╔╝███████║    ██║     ███████╗██║  ██║   ██║   ███████╗██║  ██║
-╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚══════╝    ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-'''
+
+# ==============|
+# STATUS PLAYER |
+# ==============|
 def status_player():
-    print('\n===================================')
-    print('|    STATUS DO SEU PERSONAGEM!    |')
-    print('===================================\n')
+    show_message('STATUS DO SEU PERSONAGEM')
+    print('')
 
     read_accounts()
     for account in accounts:
@@ -305,48 +259,61 @@ def status_player():
                 print(f'{k}: {v}')
             break
 
-'''
-███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗    ██████╗  █████╗ ████████╗████████╗██╗     ███████╗
-██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║    ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝
-███████╗█████╗  ███████║██████╔╝██║     ███████║    ██████╔╝███████║   ██║      ██║   ██║     █████╗  
-╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║    ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  
-███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║    ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗
-╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝
-'''
+
+# ==============|
+# SEARCH BATTLE |
+# ==============|
 def search_battle():
     global enemy
-    enemy = choice(read_enemies())
 
-    mult_equal = (len(enemy['pre3'])+len(enemy['name'])+len(str(enemy['health'])))*'='
-    print(f'\n===================================={mult_equal}')
-    print(f'|  VOCÊ ENCONTROU {enemy["pre3"].upper()} {enemy["name"].upper()} COM {enemy["health"]} DE VIDA!  |')
-    print(f'===================================={mult_equal}')
+    for account in accounts:
+        if usuario.lower() == account['username'].lower():
+            player_health = int(account['health'])
+            if player_health > 0:
+                enemy = choice(read_enemies())
 
-    while True:
-        fight = input('\nDeseja continuar com esta batalha? (S para sim ou N para não): ')
-        try:
-            if fight.upper() == 'S':
-                battle()
-                break
-            elif fight.upper() == 'N':
-                game()
-                break
+                show_message(f'VOCÊ ENCONTROU {enemy["pre3"].upper()} {enemy["name"].upper()} COM {enemy["health"]} DE VIDA!')
+
+                while True:
+                    fight = input('\nDeseja continuar com esta batalha? (S para sim ou N para não): ')
+                    try:
+                        if fight.upper() == 'S':
+                            battle()
+                            break
+                        elif fight.upper() == 'N':
+                            game()
+                            break
+                        else:
+                            show_message('Por favor, digite S ou N para continuar.')
+
+                    except ValueError as err: 
+                        show_message('Por favor, digite S ou N para continuar.')
             else:
-                error_menu()
+                show_message('Seu personagem está morto mas você ainda pode se curar.')
+                player_healthPotion = int(account['healthPotion'])
+                player_healthMax = int(account['healthMax'])
+                if player_healthPotion > 0:
+                    potion_now = player_heal(player_healthPotion)
+                    if potion_now != player_healthPotion:
+                        account['health'] = player_healthMax
+                        account['healthPotion'] = potion_now
+                        update_data()
+                        show_message(f'Sua vida foi restaurada e voltou a ter {player_healthMax} de vida!')
+                        game()
+                    else:
+                        show_message('Para continuar batalhando, cure seu personagem.')
+                        game()
+                else:
+                    show_message('Você não tem mais poções de cura e seu personagem está morto.')
+                    game()
 
-        except ValueError as err: 
-            error_menu()
 
-'''
-██████╗  █████╗ ████████╗████████╗██╗     ███████╗
-██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝
-██████╔╝███████║   ██║      ██║   ██║     █████╗  
-██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  
-██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗
-╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝
-'''
+# =======|
+# BATTLE |
+# =======|
 def battle():
     enemy_dead = 0
+    player_dead = 0
     # ADAPTAR SORTEIO PARA QUEM ATACA PRIMEIRO
     # POR ENQUANTO O PLAYER ESTÁ COMEÇANDO O ATAQUE
     # turn = ['enemy', 'player']
@@ -355,69 +322,103 @@ def battle():
     while int(enemy['health']) > 0:
         for account in accounts:
             if usuario.lower() == account['username'].lower():
+
                 player_health = int(account['health'])
                 player_healthMax = int(account['healthMax'])
                 player_exp = int(account['exp'])
-                player_atkMin = int(account['atkMin'])
-                player_atkMax = int(account['atkMax'])
-                player_dmg = randint(player_atkMin, player_atkMax)
+                player_dmg = randint(int(account['atkMelee'][0]), int(account['atkMelee'][1]))
+                player_healthPotion = int(account['healthPotion'])
                 enemy_health = int(enemy['health'])
                 enemy_new_health = enemy_health - player_dmg
                 enemy_exp = int(enemy['exp'])
-                enemy_atk = int(enemy['atk'])
+                enemy_dmg = randint(int(enemy['atkMelee'][0]), int(enemy['atkMelee'][1]))
+
                 print(f'\n============================================================')
-                if enemy_new_health <= 0:
-                    enemy_new_health = 0
-                    print(f'Seu último dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou!')
-                    print(f'VOCÊ GANHOU {enemy_exp} DE EXPERIÊNCIA E SUA VIDA FOI RESTAURADA.')
-                    account['health'] = player_healthMax
-                    account['exp'] = player_exp + enemy_exp
-                    enemy_dead = 1
-                else:
-                    print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e {enemy["pre2"]} deixou com {enemy_new_health} de vida.')
-                    enemy['health'] = enemy_new_health
+                if player_dead == 0:
+                    if enemy_new_health <= 0:
+                        enemy_new_health = 0
+                        print(f'Seu último dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou!')
+                        print(f'VOCÊ GANHOU {enemy_exp} DE EXPERIÊNCIA E SUA VIDA FOI RESTAURADA.')
+                        account['health'] = player_healthMax
+                        account['exp'] = player_exp + enemy_exp
+                        enemy_dead = 1
+                        
+                    elif player_dead == 0:
+                        print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e {enemy["pre2"]} deixou com {enemy_new_health} de vida.')
+                        enemy['health'] = enemy_new_health
 
                 if enemy_dead == 0:
-                    player_new_health = player_health - enemy_atk
-                    account['health'] = player_new_health
-                    print(f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {enemy_atk}. Sua vida era {player_health} e passou a ser {player_new_health}.')
+                    if player_dead == 0:
+                        player_new_health = player_health - enemy_dmg
+                        account['health'] = player_new_health
+                        if enemy_dmg > 0:
+                            print(f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {enemy_dmg}.')
+                            if player_new_health <= 0:
+                                account['health'] = 0
+                                print('Você morreu!')
+                                player_dead = 1
+                            else:
+                                print(f'Sua vida era {player_health} e passou a ser {player_new_health}.')
+                                if player_healthPotion > 0:
+                                    potion_now = player_heal(player_healthPotion)
+                                    if potion_now != player_healthPotion:
+                                        account['health'] = player_healthMax
+                                        account['healthPotion'] = potion_now
+                                        show_message(f'Sua vida foi restaurada e voltou a ter {player_healthMax} de vida!')
+                                else:
+                                    pass
+                        else:
+                            print(f'{enemy["pre2"].upper()} {enemy["name"]} errou o ataque em você.')
                 print(f'============================================================')
                 
                 update_data()
                 read_accounts()
 
-        if enemy_dead:
+        if enemy_dead == 1:
+            game()
+            break
+        elif player_dead == 1:
             game()
             break
 
-'''
- ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗     █████╗  ██████╗ ██████╗
-██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝    ██╔══██╗██╔════╝██╔════╝
-██║     ███████║█████╗  ██║     █████╔╝     ███████║██║     ██║     
-██║     ██╔══██║██╔══╝  ██║     ██╔═██╗     ██╔══██║██║     ██║     
-╚██████╗██║  ██║███████╗╚██████╗██║  ██╗    ██║  ██║╚██████╗╚██████╗
- ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
-'''
-def check_accounts():
-    read_accounts()
 
-    # Apenas para ajudar no desenvolvimento.
-    print('\n========INFORMAÇÃO PROVISÓRIA========')
-    account_list = []
-    for account in read_accounts():
-        account_list.append(account['username'])
-    print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
-    print('=====================================')
-    # Apenas para ajudar no desenvolvimento.
+# ============|
+# PLAYER HEAL |
+# ============|
+def player_heal(potions):
+    while True:
+        heal = input(f'\nVocê possue {potions} poções de cura, deseja usar? (S para sim ou N para não): ')
+        try:
+            if heal.upper() == 'S':
+                potions = potions - 1
+                return potions
+            elif heal.upper() == 'N':
+                return potions
+            else:
+                show_message('Por favor, digite S ou N para continuar.')
 
-'''
-██████╗ ███████╗ █████╗ ██████╗      █████╗  ██████╗ ██████╗
-██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔══██╗██╔════╝██╔════╝
-██████╔╝█████╗  ███████║██║  ██║    ███████║██║     ██║     
-██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══██║██║     ██║     
-██║  ██║███████╗██║  ██║██████╔╝    ██║  ██║╚██████╗╚██████╗
-╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
-'''
+        except ValueError as err: 
+            show_message('Por favor, digite S ou N para continuar.')
+
+
+# =============|
+# SHOW MESSAGE |
+# =============|
+def show_message(message):
+    print(f'\n|=={len(message)*"="}==|\n|  {message}  |\n|=={len(message)*"="}==|')
+
+
+# ============|
+# UPDATE DATA |
+# ============|
+def update_data():
+    with open(accounts_file, 'w', encoding='utf-8') as acc:
+        dump(accounts, acc, indent=4, separators=(',', ': '))
+
+
+# ==============|
+# READ ACCOUNTS |
+# ==============|
 def read_accounts():
     global accounts
     with open(accounts_file, encoding='utf-8') as acc:
@@ -425,14 +426,10 @@ def read_accounts():
 
     return accounts
 
-'''
-██████╗ ███████╗ █████╗ ██████╗     ███████╗███╗   ██╗███████╗███╗   ███╗██╗███████╗███████╗
-██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔════╝████╗  ██║██╔════╝████╗ ████║██║██╔════╝██╔════╝
-██████╔╝█████╗  ███████║██║  ██║    █████╗  ██╔██╗ ██║█████╗  ██╔████╔██║██║█████╗  ███████╗
-██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══╝  ██║╚██╗██║██╔══╝  ██║╚██╔╝██║██║██╔══╝  ╚════██║
-██║  ██║███████╗██║  ██║██████╔╝    ███████╗██║ ╚████║███████╗██║ ╚═╝ ██║██║███████╗███████║
-╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚═╝╚═╝╚══════╝╚══════╝
-'''
+
+# =============|
+# READ ENEMIES |
+# =============|
 def read_enemies():
     global enemies
     with open(enemies_file, encoding='utf-8') as en:
@@ -440,26 +437,10 @@ def read_enemies():
 
     return enemies
 
-'''
-██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗    ██████╗  █████╗ ████████╗ █████╗ 
-██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝    ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
-██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗      ██║  ██║███████║   ██║   ███████║
-██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝      ██║  ██║██╔══██║   ██║   ██╔══██║
-╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗    ██████╔╝██║  ██║   ██║   ██║  ██║
- ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
-'''
-def update_data():
-    with open(accounts_file, 'w', encoding='utf-8') as acc:
-        dump(accounts, acc, indent=4, separators=(',', ': '))
 
-'''
- ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗    ██████╗ ███████╗███████╗ █████╗ ██╗   ██╗██╗  ████████╗
-██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝    ██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║██║  ╚══██╔══╝
-██║     ███████║█████╗  ██║     █████╔╝     ██║  ██║█████╗  █████╗  ███████║██║   ██║██║     ██║   
-██║     ██╔══██║██╔══╝  ██║     ██╔═██╗     ██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║   ██║██║     ██║   
-╚██████╗██║  ██║███████╗╚██████╗██║  ██╗    ██████╔╝███████╗██║     ██║  ██║╚██████╔╝███████╗██║   
- ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝    ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   
-'''
+# ==============|
+# CHECK DEFAULT |
+# ==============|
 def check_default():
     cache = 0
     read_accounts()
@@ -474,7 +455,23 @@ def check_default():
 
     if cache:
         update_data()
-        print('Dados Default foram atualizados.\n')
+        show_message('Dados Default foram atualizados.')
+
+
+# ===============|
+# CHECK ACCOUNTS |
+# ===============|
+def check_accounts():
+    read_accounts()
+
+    # Apenas para ajudar no desenvolvimento.
+    print('\n========INFORMAÇÃO PROVISÓRIA========')
+    account_list = []
+    for account in read_accounts():
+        account_list.append(account['username'])
+    print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
+    print('=====================================')
+    # Apenas para ajudar no desenvolvimento.
 
 
 introducao()

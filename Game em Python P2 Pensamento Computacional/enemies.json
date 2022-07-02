@@ -1,58 +1,58 @@
 [
     {
-        "name": "Dragão",
+        "name": "Bug",
+        "pre1": "no",
+        "pre2": "o",
+        "pre3": "um",
+        "health": 29,
+        "healthMax": 29,
+        "exp": 18,
+        "atkMelee": [
+            0,
+            23
+        ],
+        "loot": {
+            "Gold Coin": 10,
+            "Cherry": 2
+        }
+    },
+    {
+        "name": "Minotaur",
         "pre1": "no",
         "pre2": "o",
         "pre3": "um",
         "health": 100,
         "healthMax": 100,
-        "exp": 1000,
-        "atk": 20,
+        "exp": 50,
+        "atkMelee": [
+            10,
+            40
+        ],
         "loot": {
-            "Gold Coin": 200,
+            "Gold Coin": 25,
+            "Meat": 2,
+            "Sword": 1,
+            "Axe": 1,
+            "Minotaur Horns": 2
+        }
+    },
+    {
+        "name": "Dragon",
+        "pre1": "no",
+        "pre2": "o",
+        "pre3": "um",
+        "health": 1000,
+        "healthMax": 1000,
+        "exp": 700,
+        "atkMelee": [
+            0,
+            130
+        ],
+        "loot": {
+            "Gold Coin": 110,
+            "Plate Legs": 1,
+            "Steel Shield": 1,
             "Dragon Shield": 1
-        }
-    },
-    {
-        "name": "Cobra",
-        "pre1": "na",
-        "pre2": "a",
-        "pre3": "uma",
-        "health": 50,
-        "healthMax": 50,
-        "exp": 500,
-        "atk": 10,
-        "loot": {
-            "Snake Tail": 1,
-            "Gold Coin": 2
-        }
-    },
-    {
-        "name": "Morcego",
-        "pre1": "no",
-        "pre2": "o",
-        "pre3": "um",
-        "health": 60,
-        "healthMax": 60,
-        "exp": 600,
-        "atk": 12,
-        "loot": {
-            "Bat Wing": 2,
-            "Gold Coin": 4
-        }
-    },
-    {
-        "name": "Bug",
-        "pre1": "no",
-        "pre2": "o",
-        "pre3": "um",
-        "health": 20,
-        "healthMax": 20,
-        "exp": 100,
-        "atk": 5,
-        "loot": {
-            "Gold Coin": 10,
-            "Cherry": 2
         }
     }
 ]
