@@ -5,7 +5,7 @@ Período: 1o
 Disciplina: Pensamento Computacional
 Grupo: Fabrício Souza, Hygor Rasec e Victor Bernardo
 Tema escolhido: Game em Python no estilo RPG.
-Versão: 2.2
+Versão: 2.3
 
 '''
 
@@ -22,6 +22,9 @@ from json import dump, load
 # load = usado para ler o arquivo json.
 from os import stat
 # stat = usado para verificar se o arquivo json está vazio.
+from colorama import init, Fore
+# biblioteca para alterar as cores dos textos.
+init()
 
 
 # ==========|
@@ -96,7 +99,7 @@ def introducao():
                 dump(enemies_list, enemies_l, indent=4, separators=(',', ': '))
             break
 
-    print('\nOlá, jogador(a)! Seja bem-vindo(a) ao Delta AVA Game! Vamos iniciar sua jornada...\nSe você já tem uma jornada, digite 1 para entrar. Caso seja um(a) novo(a) aventureiro(a), digite 2 para criar sua conta ou 3 para sair.')
+    print(Fore.MAGENTA + '\nOlá, jogador(a)! Seja bem-vindo(a) ao Delta AVA Game! Vamos iniciar sua jornada...\nSe você já tem uma jornada, digite 1 para entrar. Caso seja um(a) novo(a) aventureiro(a), digite 2 para criar sua conta ou 3 para sair.')
     menu()
 
 
@@ -104,8 +107,18 @@ def introducao():
 # MENU |
 # =====|
 def menu():
+
+    # Apenas para ajudar no desenvolvimento.
+    print(Fore.BLUE + '\n========INFORMAÇÃO PROVISÓRIA========')
+    account_list = []
+    for account in read_accounts():
+        account_list.append(account['username'])
+    print(Fore.BLUE + f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
+    print(Fore.BLUE + '=====================================')
+    # Apenas para ajudar no desenvolvimento.
+
     while True:
-        print('''\nDigite um número de acordo com o que deseja fazer:
+        print(Fore.YELLOW + '''\nDigite um número de acordo com o que deseja fazer:
 
     [ 1 ] - Entrar
     [ 2 ] - Criar uma nova conta
@@ -136,9 +149,9 @@ def entrar():
     global usuario
     account_ok = 0
     password_ok = 0
-    check_accounts()
+    read_accounts()
     show_message('ENTRAR NO JOGO')
-    usuario = input('\nDigite seu usuário: ')
+    usuario = input(Fore.YELLOW + '\nDigite seu usuário: ')
     senha = input('Digite sua senha: ')
 
     for account in accounts:
@@ -156,6 +169,18 @@ def entrar():
             show_message('VOCÊ DIGITOU UMA SENHA ERRADA')
             menu()
         else:
+            # Verificar se os dados estão ok.
+            check_default()
+            read_accounts()
+            for account in accounts:
+                if usuario.lower() == account['username'].lower():
+                    if int(account['firstLogin']) == 1:
+                        account['firstLogin'] = 0
+                        update_data()
+                        show_message(f'OLÁ {usuario.upper()}, SEJA MUITO BEM VINDO(A) AO JOGO!')
+                    else:
+                        show_message(f'OLÁ {usuario.upper()}, É BOM TE VER POR AQUI NOVAMENTE!')
+
             game()
 
 
@@ -167,9 +192,9 @@ def registro():
         show_message('REGISTRO')
         check = 0
 
-        check_accounts()
+        read_accounts()
 
-        usuario = input('\nDigite seu usuário: ')
+        usuario = input(Fore.YELLOW + '\nDigite seu usuário: ')
         senha = input('Digite sua senha: ')
 
         if usuario != '':
@@ -183,12 +208,8 @@ def registro():
                     data_default_player['username'] = usuario
                     data_default_player['password'] = senha
                     accounts.append(data_default_player)
-
                     update_data()
-
                     show_message('REGISTRO REALIZADO COM SUCESSO!')
-
-                    check_accounts()
                     menu()
                     break
                 else:
@@ -208,22 +229,9 @@ def registro():
 # GAME |
 # =====|
 def game():
-    # Verificar se os dados estão ok.
-    check_default()
-    read_accounts()
-
     while True:
-        for account in accounts:
-            if usuario.lower() == account['username'].lower():
-                if int(account['firstLogin']) == 1:
-                    account['firstLogin'] = 0
-                    update_data()
-                    show_message(f'OLÁ {usuario.upper()}, SEJA MUITO BEM VINDO(A) AO JOGO!')
-                else:
-                    show_message(f'OLÁ {usuario.upper()}, É BOM TE VER POR AQUI NOVAMENTE!')
-                break
-
-        print('''
+        show_message('ESCOLHA O QUE DESEJA FAZER:')
+        print(Fore.YELLOW + '''
     1 - Status
     2 - Procurar batalha
     3 - Sair
@@ -256,7 +264,7 @@ def status_player():
     for account in accounts:
         if usuario.lower() == account['username'].lower():
             for k, v in account.items():
-                print(f'{k}: {v}')
+                print(Fore.GREEN + f'{k}: {v}')
             break
 
 
@@ -275,7 +283,7 @@ def search_battle():
                 show_message(f'VOCÊ ENCONTROU {enemy["pre3"].upper()} {enemy["name"].upper()} COM {enemy["health"]} DE VIDA!')
 
                 while True:
-                    fight = input('\nDeseja continuar com esta batalha? (S para sim ou N para não): ')
+                    fight = input(Fore.RED + '\nDeseja continuar com esta batalha? (S para sim ou N para não): ')
                     try:
                         if fight.upper() == 'S':
                             battle()
@@ -333,18 +341,18 @@ def battle():
                 enemy_exp = int(enemy['exp'])
                 enemy_dmg = randint(int(enemy['atkMelee'][0]), int(enemy['atkMelee'][1]))
 
-                print(f'\n============================================================')
+                print(Fore.CYAN + f'\n============================================================')
                 if player_dead == 0:
                     if enemy_new_health <= 0:
                         enemy_new_health = 0
-                        print(f'Seu último dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou!')
-                        print(f'VOCÊ GANHOU {enemy_exp} DE EXPERIÊNCIA E SUA VIDA FOI RESTAURADA.')
+                        print(Fore.CYAN + f'Seu último dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e você {enemy["pre2"]} matou!')
+                        print(Fore.CYAN + f'VOCÊ GANHOU {enemy_exp} DE EXPERIÊNCIA E SUA VIDA FOI RESTAURADA.')
                         account['health'] = player_healthMax
                         account['exp'] = player_exp + enemy_exp
                         enemy_dead = 1
                         
                     elif player_dead == 0:
-                        print(f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e {enemy["pre2"]} deixou com {enemy_new_health} de vida.')
+                        print(Fore.CYAN + f'Seu dano {enemy["pre1"]} {enemy["name"]} foi {player_dmg} e {enemy["pre2"]} deixou com {enemy_new_health} de vida.')
                         enemy['health'] = enemy_new_health
 
                 if enemy_dead == 0:
@@ -352,13 +360,13 @@ def battle():
                         player_new_health = player_health - enemy_dmg
                         account['health'] = player_new_health
                         if enemy_dmg > 0:
-                            print(f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {enemy_dmg}.')
+                            print(Fore.CYAN + f'{enemy["pre2"].upper()} {enemy["name"]} te deu um dano de {enemy_dmg}.')
                             if player_new_health <= 0:
                                 account['health'] = 0
-                                print('Você morreu!')
+                                print(Fore.CYAN + 'Você morreu!')
                                 player_dead = 1
                             else:
-                                print(f'Sua vida era {player_health} e passou a ser {player_new_health}.')
+                                print(Fore.CYAN + f'Sua vida era {player_health} e passou a ser {player_new_health}.')
                                 if player_healthPotion > 0:
                                     potion_now = player_heal(player_healthPotion)
                                     if potion_now != player_healthPotion:
@@ -368,8 +376,8 @@ def battle():
                                 else:
                                     pass
                         else:
-                            print(f'{enemy["pre2"].upper()} {enemy["name"]} errou o ataque em você.')
-                print(f'============================================================')
+                            print(Fore.CYAN + f'{enemy["pre2"].upper()} {enemy["name"]} errou o ataque em você.')
+                print(Fore.CYAN + f'============================================================')
                 
                 update_data()
                 read_accounts()
@@ -387,7 +395,7 @@ def battle():
 # ============|
 def player_heal(potions):
     while True:
-        heal = input(f'\nVocê possue {potions} poções de cura, deseja usar? (S para sim ou N para não): ')
+        heal = input(Fore.GREEN + f'\nVocê possue {potions} poções de cura, deseja usar? (S para sim ou N para não): ')
         try:
             if heal.upper() == 'S':
                 potions = potions - 1
@@ -405,7 +413,7 @@ def player_heal(potions):
 # SHOW MESSAGE |
 # =============|
 def show_message(message):
-    print(f'\n|=={len(message)*"="}==|\n|  {message}  |\n|=={len(message)*"="}==|')
+    print(Fore.MAGENTA + f'\n|=={len(message)*"="}==|\n|  {message}  |\n|=={len(message)*"="}==|')
 
 
 # ============|
@@ -450,28 +458,12 @@ def check_default():
             if usuario.lower() == account['username'].lower():
                 if k not in account.keys():
                     account[k] = v
-                    print(f'A chave "{k}" com o valor "{v}" foi adicionado.')
+                    print(Fore.GREEN + f'A chave "{k}" com o valor "{v}" foi adicionado.')
                     cache = 1
 
     if cache:
         update_data()
         show_message('Dados Default foram atualizados.')
-
-
-# ===============|
-# CHECK ACCOUNTS |
-# ===============|
-def check_accounts():
-    read_accounts()
-
-    # Apenas para ajudar no desenvolvimento.
-    print('\n========INFORMAÇÃO PROVISÓRIA========')
-    account_list = []
-    for account in read_accounts():
-        account_list.append(account['username'])
-    print(f'Total de account(s) registrada(s): {len(account_list)}\nAccount(s): {account_list}')
-    print('=====================================')
-    # Apenas para ajudar no desenvolvimento.
 
 
 introducao()
