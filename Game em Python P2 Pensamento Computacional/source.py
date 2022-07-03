@@ -24,6 +24,8 @@ from os import stat
 # stat = usado para verificar se o arquivo json está vazio.
 from colorama import init, Fore
 # biblioteca para alterar as cores dos textos.
+from passlib.hash import pbkdf2_sha256 as cryp
+# biblioteca de cryptografia
 init()
 
 
@@ -157,7 +159,7 @@ def entrar():
     for account in accounts:
         if usuario.lower() == account['username'].lower():
             account_ok = 1
-            if senha == account['password']:
+            if cryp.verify(senha, account['password']):
                 password_ok = 1
                 break
 
@@ -171,7 +173,6 @@ def entrar():
         else:
             # Verificar se os dados estão ok.
             check_default()
-            read_accounts()
             for account in accounts:
                 if usuario.lower() == account['username'].lower():
                     if int(account['firstLogin']) == 1:
@@ -206,7 +207,7 @@ def registro():
 
                 if check == 0:
                     data_default_player['username'] = usuario
-                    data_default_player['password'] = senha
+                    data_default_player['password'] = cryp.hash(senha, rounds=200000, salt_size=16)
                     accounts.append(data_default_player)
                     update_data()
                     show_message('REGISTRO REALIZADO COM SUCESSO!')
@@ -326,8 +327,8 @@ def battle():
     # POR ENQUANTO O PLAYER ESTÁ COMEÇANDO O ATAQUE
     # turn = ['enemy', 'player']
     # if turn[randrange(len(turn))] == 'player':
-    read_accounts()
     while int(enemy['health']) > 0:
+        read_accounts()
         for account in accounts:
             if usuario.lower() == account['username'].lower():
 
@@ -373,19 +374,14 @@ def battle():
                                         account['health'] = player_healthMax
                                         account['healthPotion'] = potion_now
                                         show_message(f'Sua vida foi restaurada e voltou a ter {player_healthMax} de vida!')
-                                else:
-                                    pass
+
                         else:
                             print(Fore.CYAN + f'{enemy["pre2"].upper()} {enemy["name"]} errou o ataque em você.')
                 print(Fore.CYAN + f'============================================================')
                 
                 update_data()
-                read_accounts()
 
-        if enemy_dead == 1:
-            game()
-            break
-        elif player_dead == 1:
+        if enemy_dead == 1 or player_dead == 1:
             game()
             break
 
