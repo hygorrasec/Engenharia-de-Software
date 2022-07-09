@@ -15,3 +15,6 @@ Repositório para Exercícios, Trabalhos e Projetos desenvolvidos por Hygor Rase
  - Adicionado arquivo com Exercícios de Fixação com Variáveis e Tipo de Dados em Python. Criado em 09/04/2022.
  - Adicionado arquivo com Exercícios de Fixação com Estruturas Lógicas e Condicionais em Python. Criado em 14/04/2022.
  - Adicionado pasta com projetos de treinamento em Spring React. Criado em 15/05/2022.
+ 
+**> P2 Pensamento Computacional:**
+ - O projeto será continuado em um novo repositório: [RPGTerminal](https://github.com/hygorrasec/RPGTerminal)
