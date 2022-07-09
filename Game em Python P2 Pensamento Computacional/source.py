@@ -140,7 +140,7 @@ def menu():
             else:
                 show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
         
-        except ValueError as err: 
+        except ValueError as err:
             show_message('POR FAVOR, DIGITE A OPÇÃO CORRETA')
 
 
@@ -389,7 +389,7 @@ def battle():
 # ============|
 # PLAYER HEAL |
 # ============|
-def player_heal(potions):
+def player_heal(potions: str):
     while True:
         heal = input(Fore.GREEN + f'\nVocê possue {potions} poções de cura, deseja usar? (S para sim ou N para não): ')
         try:
@@ -408,7 +408,7 @@ def player_heal(potions):
 # =============|
 # SHOW MESSAGE |
 # =============|
-def show_message(message):
+def show_message(message: str):
     print(Fore.MAGENTA + f'\n|=={len(message)*"="}==|\n|  {message}  |\n|=={len(message)*"="}==|')
 
 
